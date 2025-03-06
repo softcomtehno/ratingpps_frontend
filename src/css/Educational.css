@@ -1,0 +1,357 @@
+.Edu__logo-name {
+  display: flex;
+  gap: 50px;
+  padding: 36px 36px;
+}
+.title__contain {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.title__contain-M {
+  margin: 32px 0 16px 0;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+.Edu__text-L {
+  color: #2D4478;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+}
+.Edu__text-M {
+  color: #2D4478;
+  display: flex;
+  align-items: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+}
+.Edu__text-M-office {
+  margin: 0 0 10px 10px;
+}
+.Edu__text-S {
+  color: #2D4478;
+  display: flex;
+  align-items: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.Edu__text-S-office {
+  margin: 5px 0 10px 5px;
+}
+.Edu__table {
+  width: 70%;
+  display: grid;
+  grid-template-rows: 45px 45px 45px;
+  grid-template-columns: 70% 15% 15%;
+  margin-bottom: 50px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px #2D4478 solid;
+}
+.row:nth-child(1),.row:nth-child(2),.row:nth-child(3) {
+  background: #2D4478;
+}
+.bold {
+  font-weight: 800;
+}
+.Kite__logo {
+  background: url(../img/image3.png) no-repeat center center;
+  background-size: 118px 118px;
+  width: 118px;
+  height: 118px;
+}
+.Kite__name {
+  width: 44%;
+  color: #282744;
+}
+.MUIT__logo {
+  background: url(../img/image2.png) no-repeat center center;
+  background-size: 164px 73.5px;
+  width: 164px;
+  height: 73.5px;
+}
+.MUIT__name {
+  width: 40%;
+  color: #2D4478;
+}
+.Komteh__logo {
+  background: url(../img/image1.png) no-repeat center center;
+  background-size: 103px 103px;
+  width: 103px;
+  height: 103px;
+}
+.Komteh__name {
+  width: 45%;
+  color: #00453D;
+}
+.Kite-link {
+  display: flex;
+  gap: 50px;
+  padding: 36px 36px;
+}
+.Link__name {
+  width: 58%;
+  color: #2D4478;
+}
+.table__link {
+  width: 70%;
+  display: grid;
+  grid-template-rows: 45px 45px 45px 45px 45px;
+  grid-template-columns: 10% 70% 20%;
+  margin-bottom: 25px;
+}
+.table__links ul{
+  list-style: none;
+  color: #2D4478;
+}
+.table__links li {
+  border-bottom: 1px #2D4478 solid;
+  padding: 15px 0;
+  display: table;
+}
+.search__label {
+  display: flex;
+  align-items: center;
+}
+.search__input {
+  width: 500px;
+  height: 50px;
+  border-radius: 40px 0 0 40px;
+  padding: 5px 10px 5px 10px;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 20px;
+}
+.search__input-rating {
+  width: 300px;
+  height: 45px;
+  border-radius: 40px 0 0 40px;
+  padding: 5px 10px 5px 10px;
+  box-sizing: border-box;
+  outline: none
+}
+.search__btn-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2D4478;
+  cursor: pointer;
+  width: 50px;
+  height: 45px;
+  border-radius: 0px 40px 40px 0px;
+}
+.search__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2D4478;
+  cursor: pointer;
+  width: 60px;
+  height: 50px;
+  border-radius: 0px 40px 40px 0px;
+}
+.search__btn-in {
+  background-image: url(../img/magnifier.svg);
+  width: 28px;
+  height: 28px;
+}
+.auth__contain {
+  margin: 0 auto;
+  width: 530px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.auth__input {
+  padding: 5px 10px 5px 10px;
+  width: 500px;
+  height: 50px;
+  border: none;
+  box-shadow: 2px 2px 30px -7.5px rgba(0,0,0,0.25);
+  font-size: 16px;
+  color: #2D4478;
+  margin-top: 15px;
+  outline: none;
+}
+.show-password-checkbox {
+  display: flex;
+  align-items: center;
+}
+.show-password-checkbox>input {
+  width: 15px;
+  height: 15px;
+}
+.auth_auth {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 900px;
+  gap: 5px;
+  margin-left: 15px;
+}
+.auth__contain-doble {
+  margin-top: 17px;
+}
+.auth-auth-c {
+  width: 1000px;
+  margin: 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 60px;
+}
+.auth__select {
+  width: 520px;
+  height: 60px;
+}
+.awards__block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 900px;
+}
+.awards__select{
+  width: 500px;
+  height: 60px;
+}
+.trued {
+  padding: 14px 20px;
+  display: flex;
+  background-color: #16A767;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+.white {
+  color: white;
+}
+.input__text {
+  color: #2D4478;
+  font-size: 22px;
+  margin-top: 12.5px;
+}
+.Montherat {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  display: flex;
+  align-items: center;
+}
+.link_btn {
+  text-decoration: none;
+}
+.checkbox {
+  width: 20px;
+  height: 20px;
+  margin: 10px 10px 10px 0;
+}
+.remember {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 10px 0 0 0;
+}
+.checkbox__text {
+  color: #2D4478;
+  font-size: 18px;
+}
+.forgot__text {
+  color: #2D4478;
+  font-size: 16px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+.auth__btn {
+  margin-top: 15px;
+  width: 98%;
+  display: flex;
+  justify-content: space-between;
+}
+.auth__btn-center{
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.bnt__log {
+  padding: 14px 45px;
+  background-color: #16A767;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+.bnt__reg {
+  padding: 14px 45px;
+  background-color: #2D4478;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+.sorter {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .Edu__logo-name {
+    display: flex;
+    justify-content: start;
+    gap: 50px;
+    padding: 16px 16px;
+  }
+
+  .Kite__logo {
+    background: none;
+    width: 0;
+    height: 0;
+  }
+  .Kite__name {
+    width: 44%;
+    color: #282744;
+  }
+  .MUIT__logo {
+    background: none;
+    width: 0;
+    height: 0;
+  }
+  .MUIT__name {
+    width: 40%;
+    color: #2D4478;
+  }
+  .Komteh__logo {
+    background: none;
+    width: 0;
+    height: 0;
+  }
+  .Komteh__name {
+    width: 45%;
+    color: #00453D;
+  }
+}
+
+@media (max-width: 548px) {
+  .auth__contain {
+    margin: 0 auto;
+    width: 360px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .auth__input {
+    padding: 5px 10px 5px 10px;
+    width: 340px;
+    height: 50px;
+    border: none;
+    box-shadow: 2px 2px 30px -7.5px rgba(0,0,0,0.25);
+    font-size: 16px;
+    color: #2D4478;
+    margin-top: 15px;
+  }
+}

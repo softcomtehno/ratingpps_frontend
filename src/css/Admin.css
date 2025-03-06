@@ -1,0 +1,99 @@
+.search__label-admin {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 10px 10px;
+}
+.admin-panel__main {
+  display: flex;
+  flex-direction: column;
+}
+.users {
+  width: 96%;
+  margin: 0 auto;
+}
+.user {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: black;
+  padding: 4px;
+  font-size: 22px;
+  display: flex;
+  justify-content: space-between;
+}
+.custom-select {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.user__offences {
+  display: flex;
+  justify-content: space-between;
+}
+.options-container {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  width: 436px;
+  box-sizing: border-box;
+}
+.admin__btn {
+  width: 200px;
+  margin: 2px auto;
+}
+.admin__link {
+  display: flex;
+  align-items: center;
+}
+.crossed-out {
+  text-decoration: line-through;
+}
+.jc-sb {
+  display: flex;
+  justify-content: space-evenly;
+  width: 89%;
+  position: fixed;
+  bottom: 5px;
+  background-color: white;
+}
+a.bnt__log.Link {
+  text-decoration: none;
+  font-size: medium;
+  font-weight: 300;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.check {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+.admin__links {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 15px 5.5% 25px 5.5%;
+  width: 89%;
+}
+.admin__link {
+  color: white;
+  font-size: larger;
+  width: 646px;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+  background-color: #2D4478;
+  text-decoration: none;
+  margin: 15px 0 10px;
+  padding: 7.5px;
+  border: none;
+  cursor: pointer;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.stage_name {
+  margin: 15px 5.5%;
+}
+.addPng{
+  width: 45px;
+}

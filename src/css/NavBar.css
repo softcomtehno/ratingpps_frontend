@@ -1,0 +1,170 @@
+.nav {
+  width: 100%;
+  background: #2D4478;
+}
+
+.nav__in {
+  margin: 0 auto;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav__title {
+  color: #fff;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 36px;
+  margin: 7.5px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.nav__list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 550px;
+  gap: 40px;
+  list-style: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.nav__list a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 20px;
+  font-style: normal;
+  line-height: normal;
+  text-align: center;
+}
+
+.hamburger-menu {
+  cursor: pointer;
+  width: 30px;
+  height: 22px;
+  background: url(../img/burger.svg) no-repeat center center;
+}
+
+#menu__toggle {
+  opacity: 0;
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.menu__box {
+  display: none;
+  visibility: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px 0;
+  list-style: none;
+  text-align: center;
+  background-color: #2D4478;
+  position: absolute;
+  top: 87px;
+  left: 0;
+  z-index: 1;
+}
+
+.menu__item {
+  display: block;
+  padding: 12px 24px;
+  color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu__item:hover {
+  border-bottom: 2px #fff solid;
+  display: table;
+  margin: 0 auto;
+}
+
+#menu__toggle:checked ~ .menu__box {
+  display: block;
+  visibility: visible;
+}
+
+@media (max-width: 1025px) {
+  .nav__title {
+    font-size: 28px;
+  }
+  
+  .nav__list>li:nth-child(2),
+  .nav__list>li:nth-child(3),
+  .nav__list>li:nth-child(4) {
+    display: none;
+  }
+  
+  .hamburger-menu {
+    display: block;
+  }
+
+  .menu__box {
+    display: block;
+    visibility: hidden;
+    position: absolute;
+    top: 71px;
+    left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 937px) {
+  .nav__list{
+    width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav__list{
+    width: 120px;
+  }
+
+  .nav__list>li:nth-child(2),
+  .nav__list>li:nth-child(3),
+  .nav__list>li:nth-child(4) {
+    display: none;
+  }
+
+  .menu__box {
+    display: block;
+    visibility: hidden;
+    position: absolute;
+    top: 71px;
+    left: 0;
+    width: 100%;
+  }
+
+  #menu__toggle:checked ~ .menu__box {
+    visibility: visible;
+  }
+
+  @media (max-width: 496px) {
+    .nav__title {
+      font-size: 16px;
+    }
+
+    .nav__list>li:nth-child(1),
+    .nav__list>li:nth-child(2),
+    .nav__list>li:nth-child(3),
+    .nav__list>li:nth-child(4) {
+      display: none;
+    }
+
+    .menu__box {
+      display: block;
+      visibility: hidden;
+      position: absolute;
+      top: 43px;
+      left: 0;
+      width: 100%;
+    }
+  }
+}
