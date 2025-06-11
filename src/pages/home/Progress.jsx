@@ -27,30 +27,33 @@ function Prodress() {
     }));
   }, []);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await axios.get('https://api.pps.makalabox.com/api/user/progress', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-  
-      console.log("response.data:", response.data);
-  
-      const dataArray = Array.isArray(response.data) ? response.data : [];
-      const degrees = dataArray.find(item => item.name === 'Ученая степень');
-      const ranks = dataArray.find(item => item.name === 'Ученое звание');
-      const stateAwards = dataArray.find(item => item.name === 'Гос.награды');
-  
-      setDegree(degrees?.personalAwardsSubtitles || []);
-      setRank(ranks?.personalAwardsSubtitles || []);
-      setStateAwards(stateAwards?.personalAwardsSubtitles?.map(award => ({
-        id: award.id,
-        name: award.name,
-        link: ''
-      })) || []);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token]);  
+const fetchData = useCallback(async () => {
+  try {
+    const response = await axios.get('https://api.pps.makalabox.com/api/user/progress', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    console.log("response.data:", response.data);
+
+    // Берём вложенный массив
+    const dataArray = Array.isArray(response.data?.[0]) ? response.data[0] : [];
+
+    const degrees = dataArray.find(item => item.name === 'Ученая степень');
+    const ranks = dataArray.find(item => item.name === 'Ученое звание');
+    const stateAwards = dataArray.find(item => item.name === 'Гос.награды');
+
+    setDegree(degrees?.personalAwardsSubtitles || []);
+    setRank(ranks?.personalAwardsSubtitles || []);
+    setStateAwards(stateAwards?.personalAwardsSubtitles?.map(award => ({
+      id: award.id,
+      name: award.name,
+      link: ''
+    })) || []);
+
+  } catch (error) {
+    console.log(error);
+  }
+}, [token]);
 
   useEffect(() => {
     fetchData();
