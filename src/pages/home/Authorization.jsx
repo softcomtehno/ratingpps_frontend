@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import NavBar from "../../components/NavBar";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Authorization() {
   const [name, setName] = useState('');
@@ -86,11 +86,12 @@ function Authorization() {
                   <button onClick={handleLogin} className="bnt__log Edu__text-S">Войти</button>
                 </div>
                 <div className="auth__btn">
-                  <Link to='/Registration' className="bnt__log Edu__text-S">Регистрация</Link>
+                  {/* <Link to='/Registration' className="bnt__log Edu__text-S">Регистрация</Link> */}
                 </div>
               </>
             )}
           </label>
+          <p className="input__text-p Montherat">Связь по 0502628953</p>
         </div>
       </div>
     </div>
