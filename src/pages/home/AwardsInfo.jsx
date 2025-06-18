@@ -35,27 +35,27 @@ function AwardsInfo() {
     );
   };
 
-  // const handleActionSelected = async (action) => {
-  //   try {
-  //     for (let i = 0; i < selectedItems.length; i++) {
-  //       const [itemId, stage] = selectedItems[i].split('-');
-  //       const requestData = { idBag: [{ id: itemId }] };
-  //       const url = `https://api.pps.makalabox.com/api/user/account/${stage}/${action}`;
-  //       const method = action === 'delete' ? 'delete' : 'put';
-  //       await axios({
-  //         method,
-  //         url,
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         data: requestData,
-  //       });
-  //     }
-  //     window.location.reload();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleActionSelected = async (action) => {
+    try {
+      for (let i = 0; i < selectedItems.length; i++) {
+        const [itemId, stage] = selectedItems[i].split('-');
+        const requestData = { idBag: [{ id: itemId }] };
+        const url = `https://api.pps.makalabox.com/api/user/account/${stage}/${action}`;
+        const method = action === 'delete' ? 'delete' : 'put';
+        await axios({
+          method,
+          url,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: requestData,
+        });
+      }
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="сontents">
@@ -168,10 +168,10 @@ function AwardsInfo() {
             </div>
           )}
           <div className="auth__btn-center jc-sb">
-            {/* <button className="bnt__log" onClick={() => handleActionSelected('freeze')}>Заморозить</button>
+            <button className="bnt__log" onClick={() => handleActionSelected('freeze')}>Заморозить</button>
             <button className="bnt__log" onClick={() => handleActionSelected('active')}>Разморозить</button>
             <button className="bnt__log" onClick={() => handleActionSelected('delete')}>Удалить</button>
-            <Link className="bnt__log Link" to={`/redact/${id}`}>Редактировать</Link> */}
+            <Link className="bnt__log Link" to={`/redact/${id}`}>Редактировать</Link>
           </div>
         </div>
       </div>
