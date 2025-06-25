@@ -25,10 +25,10 @@ import Kite from './pages/KITE';
 import Rating_ppsk from './pages/KITE/Rating_ppsk';
 import Rating_inst_unk from './pages/KITE/Rating_inst-unk';
 import Department from './pages/home/Department';
-import Progress from './pages/home/Progress';
-import Research from './pages/home/Research';
-import Education from './pages/home/Education';
-import Social from './pages/home/Social';
+// import Progress from './pages/home/Progress';
+// import Research from './pages/home/Research';
+// import Education from './pages/home/Education';
+// import Social from './pages/home/Social';
 import UserInfo from './pages/home/UserInfo';
 import UserInfoA from './pages/home/Admin/UserInfoA';
 import Admin from './pages/home/Admin/Admin';
@@ -65,10 +65,10 @@ function App() {
         <Route element={<PrivateRouteAdmin />}>
           {/* <Route path='/Questionnaire' element={<Questionnaire />} /> */}
           <Route path='/private_office' element={<PrivateOffice />} />
-          <Route path='/Progress' element={<Progress />} />
+          {/* <Route path='/Progress' element={<Progress />} />
           <Route path='/Ural' element={<Research />} />
           <Route path='/Education' element={<Education />} />
-          <Route path='/Social' element={<Social />} />
+          <Route path='/Social' element={<Social />} /> */}
           <Route path='/user/:id' element={<UserInfo />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/user/admin/:id' element={<UserInfoA />} />
@@ -81,10 +81,10 @@ function App() {
       return (
         <Route element={<PrivateRoute />}>
           <Route path='/private_office' element={<PrivateOffice />} />
-          <Route path='/Progress' element={<Progress />} />
+          {/* <Route path='/Progress' element={<Progress />} />
           <Route path='/Ural' element={<Research />} />
           <Route path='/Education' element={<Education />} />
-          <Route path='/Social' element={<Social />} />
+          <Route path='/Social' element={<Social />} /> */}
           <Route path='/user/:id' element={<UserInfo />} />
           <Route path='/my_account/:id' element={<AwardsInfo />} />
           <Route path='/redact/:id' element={<Redact />} />
