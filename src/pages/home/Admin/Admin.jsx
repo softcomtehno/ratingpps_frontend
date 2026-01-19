@@ -14,6 +14,7 @@ function Admin() {
           <Link to='https://api.pps.makalabox.com/admin/stage/personal_awards/' className="admin__link">Redact Stage</Link>
           <Link to='/Registration' className="admin__link">Регистрация</Link>
           <Link to='/' className="admin__link">Результаты года</Link>
+          <Link to='/admin/organization' className="admin__link">Организации</Link>
         </div>
       </div>
     </div>

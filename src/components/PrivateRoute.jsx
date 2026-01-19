@@ -9,7 +9,7 @@ const PrivateRoute = () => {
   useEffect(() => {
     const getUserRole = async () => {
       try {
-        const response = await axios.get("https://api.pps.makalabox.com/api/get/role", {
+        const response = await api.get("/api/get/role", {
           headers: {
             Authorization: `Bearer ${token}`
           }

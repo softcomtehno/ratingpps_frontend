@@ -35,6 +35,12 @@ import Admin from './pages/home/Admin/Admin';
 import Lppsa from './pages/home/Admin/LPPSA';
 import AwardsInfo from './pages/home/AwardsInfo';
 import Redact from './pages/home/Redact';
+import TeacherEmail from './pages/teacher/TeacherEmail';
+import TeacherCode from './pages/teacher/TeacherCode';
+import TeacherStep2 from './pages/teacher/TeacherStep2';
+import OAuthSuccess from "./pages/OAuthSuccess"; 
+import AdminOrganization from './pages/home/Admin/AdminOrganization'
+import api from './services/api';
 
 function App() {
   const [role, setRole] = useState(null);
@@ -43,7 +49,7 @@ function App() {
   useEffect(() => {
     const getUserRole = async () => {
       try {
-        const response = await axios.get("https://api.pps.makalabox.com/api/get/role", {
+        const response = await api.get("/api/get/role", {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -75,6 +81,7 @@ function App() {
           <Route path='/admin_list' element={<Lppsa />} />
           <Route path='/my_account/:id' element={<AwardsInfo />} />
           <Route path='/redact/:id' element={<Redact />} />
+          <Route path='/admin/organization' element={<AdminOrganization />} />
         </Route>
       );
     } else if (role === 'user') {
@@ -117,6 +124,10 @@ function App() {
         <Route path='/rating/research' element={<Rating_questR />} />
         <Route path='/rating/education' element={<Rating_questE />} />
         <Route path='/rating/social' element={<Rating_questS />} />
+        <Route path='/teacher/email'    element={<TeacherEmail />} />
+        <Route path='/teacher/code'     element={<TeacherCode />} />
+        <Route path='/teacher/step2'    element={<TeacherStep2 />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route path='*' element={<PageNotFound />} />
         {renderRoutesForRole()}
       </Routes>

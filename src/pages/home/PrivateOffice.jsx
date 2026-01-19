@@ -4,6 +4,7 @@ import RegNav from "../../components/RegNav";
 import AccountConf from "../../components/AccountConf";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../../services/api";
 
 function PrivateOffice() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function PrivateOffice() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/user/name', {
+        const response = await api.get('/api/user/name', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -41,7 +42,7 @@ function PrivateOffice() {
 
     const fetchData = async () => {
       try {
-        const infoResponse = await axios.get('https://api.pps.makalabox.com/api/user/info', {
+        const infoResponse = await api.get('/api/user/info', {
           headers: {
             Authorization: `Bearer ${token}`
           }
