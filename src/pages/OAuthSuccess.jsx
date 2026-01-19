@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import api from "../services/api";
 
 export default function OAuthSuccess() {
   const navigate = useNavigate();
@@ -11,14 +12,14 @@ export default function OAuthSuccess() {
     const token = searchParams.get("token");
     if (!token) {
       setMsg("❌ Нет токена в адресе");
-      setTimeout(() => navigate("/"), 3000);
+      // setTimeout(() => navigate("/"), 3000);
       return;
     }
 
     localStorage.setItem("token", token);
     setMsg("✅ Токен получен, загружаем профиль...");
 
-    axios.get("/api/me", { headers: { Authorization: `Bearer ${token}` } })
+    api.get("https://api.pps.makalabox.com/api/me", { headers: { Authorization: `Bearer ${token}` } })
       .then(res => {
         
         console.log("Профиль:", res.data);   
@@ -36,7 +37,7 @@ export default function OAuthSuccess() {
       })
       .catch(err => {
         setMsg(`❌ Ошибка /api/me: ${err.response?.status} ${err.response?.data?.message}`);
-        setTimeout(() => navigate("/"), 3000);
+        // setTimeout(() => navigate("/"), 3000);
       });
   }, [searchParams, navigate]);
 

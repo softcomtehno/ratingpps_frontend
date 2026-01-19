@@ -154,7 +154,7 @@ function Authorization() {
 
   /* --------- 4. Кнопка «Войти через Google» --------- */
   const googleLogin = () => {
-    window.location.href = 'http://localhost:8092/api/auth/google'; // редирект на OAuth
+    window.location.href = 'https://api.pps.makalabox.com/api/auth/google'; // редирект на OAuth
   };
 
   return (
