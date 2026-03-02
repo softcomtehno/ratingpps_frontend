@@ -100,17 +100,13 @@
 
 // export default Authorization;
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 
 function Authorization() {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-  const [error, setError] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -132,29 +128,17 @@ function Authorization() {
     }
   }, [searchParams, navigate]);
 
-  /* --------- 2. Старый вход по логину/паролю --------- */
-  const handleLogin = useCallback((e) => {
-    e.preventDefault();
-    setError(false);
-    axios.post('/api/login', { username: name, password })
-      .then(res => {
-        localStorage.setItem('token', res.data.token);
-        setIsLoggedIn(true);
-        navigate('/private_office');
-      })
-      .catch(() => setError(true));
-  }, [name, password, navigate]);
-
-  /* --------- 3. Выход --------- */
-  const handleLogout = useCallback(() => {
+  /* --------- 2. Выход --------- */
+  const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     navigate('/');
-  }, [navigate]);
+  };
 
   /* --------- 4. Кнопка «Войти через Google» --------- */
   const googleLogin = () => {
-    window.location.href = 'https://api.pps.makalabox.com/api/auth/google'; // редирект на OAuth
+    const base = import.meta.env.VITE_API_URL || 'https://api.pps.makalabox.com';
+    window.location.href = `${base}/api/auth/google`; // редирект на OAuth
   };
 
   return (
@@ -164,51 +148,30 @@ function Authorization() {
         <h2 className="Edu__text-L center">Авторизация</h2>
 
         <div className="auth__contain">
-          {/* ----------- Google-вход ----------- */}
-          {!isLoggedIn && (
-            <div className="auth__btn" style={{ marginBottom: '1rem' }}>
-              <button onClick={googleLogin} className="bnt__log Edu__text-S">
-                Войти через Google
-              </button>
-            </div>
-          )}
-
-          {/* ----------- старая форма ----------- */}
-          <form onSubmit={handleLogin}>
-            <p className="input__text Montherat">Логин</p>
-            <input type="text" className="auth__input Montherat" value={name} onChange={e => setName(e.target.value)} placeholder="Логин" required />
-
-            <p className="input__text Montherat">Пароль</p>
-            <div className="password-input-container">
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="off"
-                className="auth__input Montherat"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="Пароль"
-                required
-              />
-              <div className="show-password-checkbox">
-                <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
-                <label className="Edu__text-S">Посмотреть пароль</label>
+          {!isLoggedIn ? (
+            <>
+              <p className="input__text Montherat center">
+                Вход в систему осуществляется только через Google‑аккаунт.
+              </p>
+              <div className="auth__btn" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+                <button onClick={googleLogin} className="bnt__log Edu__text-S">
+                  Войти через Google
+                </button>
               </div>
-            </div>
-            {error && <p className="input__text Montherat">Неправильный логин или пароль</p>}
-
-            <div className="auth__btn">
-              <button type="submit" className="bnt__log Edu__text-S">Войти</button>
-            </div>
-          </form>
-
-          {/* ----------- выход / состояние ----------- */}
-          {isLoggedIn ? (
-            <div className="auth__btn-center">
-              <button onClick={handleLogout} className="bnt__log Edu__text-S">Выйти</button>
-            </div>
-          ) : null}
-
-          <p className="input__text-p Montherat">Связь по 0502628953</p>
+              <p className="input__text-p Montherat">Связь по 0502628953</p>
+            </>
+          ) : (
+            <>
+              <p className="input__text Montherat center">
+                Вы уже вошли в систему через Google.
+              </p>
+              <div className="auth__btn-center" style={{ marginTop: '1.5rem' }}>
+                <button onClick={handleLogout} className="bnt__log Edu__text-S">
+                  Выйти
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

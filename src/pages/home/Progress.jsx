@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
-import axios from "axios";
 import NavBar from "../../components/NavBar";
 import RegNav from "../../components/RegNav"
 import { useNavigate } from "react-router-dom";
 import AccountConf from "../../components/AccountConf";
+import api from "../../services/api";
 
 function Prodress() {
   const token = localStorage.getItem("token")
@@ -29,9 +29,7 @@ function Prodress() {
 
 const fetchData = useCallback(async () => {
   try {
-    const response = await axios.get('https://api.pps.makalabox.com/api/user/progress', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.get('/api/user/progress');
 
     console.log("response.data:", response.data);
 
@@ -75,11 +73,7 @@ const fetchData = useCallback(async () => {
     });
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://api.pps.makalabox.com/api/user/progress/add', { awards }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await api.post('/api/user/progress/add', { awards });
       setSend("Отправлено")
       console.log(awards);
     } catch (error) {

@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 
 const AccountConf = () => {
   const token = localStorage.getItem('token');
@@ -12,11 +12,7 @@ const AccountConf = () => {
   useEffect(() => {
     const getUserId = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/user/id', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get('/api/teacher/id');
         const respId = response.data.id;
         setId(respId);
       } catch (error) {

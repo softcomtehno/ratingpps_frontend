@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../../components/NavBar";
+import api from "../../services/api";
 
 function UserInfo() {
   const { id } = useParams();
@@ -11,11 +11,7 @@ function UserInfo() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const resp = await axios.get(`https://api.pps.makalabox.com/api/user/account/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
+        const resp = await api.get(`/api/user/account/${id}`)
         const data = resp.data;
         setUserData(data);
         console.log(data);

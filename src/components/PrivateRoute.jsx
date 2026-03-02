@@ -1,40 +1,46 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
-const PrivateRoute = () => {
-  const token = localStorage.getItem('token');
-  const [userRole, setUserRole] = useState(null);
+export default function PrivateRoute() {
+  const token = localStorage.getItem("token");
+  const [checking, setChecking] = useState(true);
+  const [ok, setOk] = useState(false);
 
   useEffect(() => {
-    const getUserRole = async () => {
-      try {
-        const response = await api.get("/api/get/role", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.log(error);
-        setUserRole(false);
-      }
-    };
+    let mounted = true;
 
-    if (token) {
-      getUserRole();
-    } else {
-      setUserRole(null);
+    async function check() {
+      if (!token) {
+        if (mounted) {
+          setOk(false);
+          setChecking(false);
+        }
+        return;
+      }
+
+      try {
+        // простой проверочный запрос (любой защищенный endpoint)
+        await api.get("/api/get/role", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (mounted) setOk(true);
+      } catch (e) {
+        // токен битый/просрочен/невалидный
+        localStorage.removeItem("token");
+        if (mounted) setOk(false);
+      } finally {
+        if (mounted) setChecking(false);
+      }
     }
+
+    check();
+    return () => { mounted = false; };
   }, [token]);
 
-  if (userRole === 'user') {
-    return <Outlet />;
-  } else if (userRole === null) {
-    return <div className="Edu__text-L center">Loading...</div>;
-  } else {
-    return <Navigate to="/Authorization" />;
+  if (checking) {
+    return <div style={{ padding: 20, textAlign: "center" }}>Проверка входа...</div>;
   }
-};
 
-export default PrivateRoute;
+  return ok ? <Outlet /> : <Navigate to="/Authorization" replace />;
+}

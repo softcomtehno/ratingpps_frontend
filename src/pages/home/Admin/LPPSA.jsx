@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import NavBar from "../../../components/NavBar";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../../../services/api";
 
 function Lppsa() {
   const [users, setUsers] = useState([]);
@@ -9,7 +9,7 @@ function Lppsa() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get("https://api.pps.makalabox.com/api/rating/users");
+      const response = await api.get("/api/rating/users");
       const data = response.data.users;
       setUsers(data);
     } catch (error) {

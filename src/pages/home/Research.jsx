@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import AccountConf from '../../components/AccountConf';
 import NavBar from '../../components/NavBar';
 import RegNav from '../../components/RegNav';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const Research = () => {
   const [isOpen, setIsOpen] = useState([]);
@@ -56,14 +56,9 @@ const Research = () => {
         });
       });
 
-      const response = await axios.post(
-        "https://api.pps.makalabox.com/api/user/research/add",
-        { ural: researchData },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+      const response = await api.post(
+        "/api/user/research/add",
+        { ural: researchData }
       );
       console.log("Data sent successfully:", response.data);
       setSent("Отправлено");
@@ -75,11 +70,7 @@ const Research = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get("https://api.pps.makalabox.com/api/user/research", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.get("/api/user/research");
       const data = response.data[0];
       const newOptions = data.map(item => ({
         ...item,

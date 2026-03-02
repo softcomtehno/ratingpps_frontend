@@ -1,8 +1,8 @@
 import NavBar from "../../components/NavBar"
 import BackButton from "../../components/Back"
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from "../../services/api";
 
 function Rating_inst_unm() {
   const [inst, setInst] = useState([]);
@@ -12,7 +12,7 @@ function Rating_inst_unm() {
   useEffect(() => {
     const getInst = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/rating/institutes');
+        const response = await api.get('/api/rating/institutes');
         const data = response.data.institutions;
         setInst(data);
         setFilteredInst(data);

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import api from "../services/api";
 
 export default function OAuthSuccess() {
@@ -19,7 +18,7 @@ export default function OAuthSuccess() {
     localStorage.setItem("token", token);
     setMsg("✅ Токен получен, загружаем профиль...");
 
-    api.get("https://api.pps.makalabox.com/api/me", { headers: { Authorization: `Bearer ${token}` } })
+    api.get("/api/me")
       .then(res => {
         
         console.log("Профиль:", res.data);   
@@ -48,3 +47,4 @@ export default function OAuthSuccess() {
     </div>
   );
 }
+

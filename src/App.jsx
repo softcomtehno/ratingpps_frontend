@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import PrivateRoute from './components/PrivateRoute';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin';
@@ -34,12 +33,16 @@ import UserInfoA from './pages/home/Admin/UserInfoA';
 import Admin from './pages/home/Admin/Admin';
 import Lppsa from './pages/home/Admin/LPPSA';
 import AwardsInfo from './pages/home/AwardsInfo';
+import AwardsPage from './pages/home/AwardsPage';
 import Redact from './pages/home/Redact';
 import TeacherEmail from './pages/teacher/TeacherEmail';
 import TeacherCode from './pages/teacher/TeacherCode';
 import TeacherStep2 from './pages/teacher/TeacherStep2';
-import OAuthSuccess from "./pages/OAuthSuccess"; 
-import AdminOrganization from './pages/home/Admin/AdminOrganization'
+import OAuthSuccess from "./pages/OAuthSuccess";
+import AdminOrganization from './pages/home/Admin/AdminOrganization';
+import OrganizationPage from "./pages/OrganizationPage";
+import OrganizationTeachersPage from "./pages/OrganizationTeachersPage";
+import MyAnswersPage from "./pages/home/MyAnswersPage";
 import api from './services/api';
 
 function App() {
@@ -69,12 +72,14 @@ function App() {
     if (role === 'admin') {
       return (
         <Route element={<PrivateRouteAdmin />}>
-          <Route path='/Questionnaire' element={<Questionnaire />} />
           <Route path='/private_office' element={<PrivateOffice />} />
+          <Route path='/Questionnaire' element={<Questionnaire />} />
           <Route path='/Progress' element={<Progress />} />
           <Route path='/Ural' element={<Research />} />
           <Route path='/Education' element={<Education />} />
           <Route path='/Social' element={<Social />} />
+          <Route path='/awards' element={<AwardsPage />} />
+          <Route path='/awards/:stageId' element={<AwardsPage />} />
           <Route path='/user/:id' element={<UserInfo />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/user/admin/:id' element={<UserInfoA />} />
@@ -82,28 +87,37 @@ function App() {
           <Route path='/my_account/:id' element={<AwardsInfo />} />
           <Route path='/redact/:id' element={<Redact />} />
           <Route path='/admin/organization' element={<AdminOrganization />} />
+          <Route path='/my_answers' element={<MyAnswersPage />} />
         </Route>
       );
-    } else if (role === 'user') {
+    }
+
+    if (role === 'teacher') {
       return (
         <Route element={<PrivateRoute />}>
           <Route path='/private_office' element={<PrivateOffice />} />
           <Route path='/Progress' element={<Progress />} />
           <Route path='/Ural' element={<Research />} />
           <Route path='/Education' element={<Education />} />
-          <Route path='/Social' element={<Social />} /> 
+          <Route path='/Social' element={<Social />} />
+          <Route path='/awards' element={<AwardsPage />} />
+          <Route path='/awards/:stageId' element={<AwardsPage />} />
           <Route path='/user/:id' element={<UserInfo />} />
           <Route path='/my_account/:id' element={<AwardsInfo />} />
           <Route path='/redact/:id' element={<Redact />} />
+          <Route path='/my_answers' element={<MyAnswersPage />} />
         </Route>
       );
     }
+
     return null;
   };
 
   return (
     <Router>
       <Routes>
+
+        {/* Публичные маршруты */}
         <Route path='/' element={<Home />} />
         <Route path='/LPPS' element={<LPPS />} />
         <Route path='/Authorization' element={<Authorization />} />
@@ -119,17 +133,26 @@ function App() {
         <Route path='/KITE' element={<Kite />} />
         <Route path='/KITE/rating_pps' element={<Rating_ppsk />} />
         <Route path='/KITE/rating_inst' element={<Rating_inst_unk />} />
-        <Route path='/department/:id' element={<Department />}/>
+        <Route path='/department/:id' element={<Department />} />
         <Route path='/rating/awards' element={<Rating_questA />} />
         <Route path='/rating/research' element={<Rating_questR />} />
         <Route path='/rating/education' element={<Rating_questE />} />
         <Route path='/rating/social' element={<Rating_questS />} />
-        <Route path='/teacher/email'    element={<TeacherEmail />} />
-        <Route path='/teacher/code'     element={<TeacherCode />} />
-        <Route path='/teacher/step2'    element={<TeacherStep2 />} />
+        <Route path='/teacher/email' element={<TeacherEmail />} />
+        <Route path='/teacher/code' element={<TeacherCode />} />
+        <Route path='/teacher/step2' element={<TeacherStep2 />} />
         <Route path="/oauth-success" element={<OAuthSuccess />} />
-        <Route path='*' element={<PageNotFound />} />
+
+        {/* Организации */}
+        <Route path="/organization/:id" element={<OrganizationPage />} />
+        <Route path="/organization/:id/teachers" element={<OrganizationTeachersPage />} />
+
+        {/* Приватные маршруты (ВАЖНО: перед 404) */}
         {renderRoutesForRole()}
+
+        {/* 404 всегда в самом конце */}
+        <Route path='*' element={<PageNotFound />} />
+
       </Routes>
     </Router>
   );

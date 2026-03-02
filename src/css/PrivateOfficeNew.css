@@ -1,0 +1,524 @@
+/* ============================================
+   PRIVATE OFFICE — Polished Card-Based Design
+   ============================================ */
+
+/* Page wrapper */
+.po-page {
+    padding: 0 20px 32px 20px;
+    max-width: 900px;
+    animation: poFadeIn 0.3s ease;
+}
+
+@keyframes poFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.po-page-title {
+    color: #2D4478;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+}
+
+/* Loading */
+.po-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 48px 20px;
+    color: #2D4478;
+    font-size: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #dde1ea;
+    border-top-color: #2D4478;
+    border-radius: 50%;
+    animation: poSpin 0.7s linear infinite;
+}
+
+@keyframes poSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Alert */
+.po-alert {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+}
+
+.po-alert--error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+/* Card */
+.po-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ======== VIEW MODE — Profile Grid ======== */
+.po-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
+}
+
+.po-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.po-field--full {
+    grid-column: 1 / -1;
+}
+
+.po-field-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8b95b0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-field-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1e293b;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding: 8px 0 4px 0;
+    border-bottom: 1px solid #f1f3f8;
+}
+
+/* ======== Section Label ======== */
+.po-section-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #2D4478;
+    margin: 28px 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e7eb;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* ======== Institute Cards (view) ======== */
+.po-institutes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.po-institute-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: #f8f9fc;
+    border: 1px solid #e8eaf0;
+    border-radius: 10px;
+    gap: 16px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.po-institute-card:hover {
+    background: #f0f2f8;
+    border-color: #c5cbda;
+}
+
+.po-institute-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.po-institute-org {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-institute-name {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-institute-badges {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.po-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    white-space: nowrap;
+}
+
+.po-badge--active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.po-badge--regular {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.po-badge--inactive {
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+.po-empty-text {
+    color: #94a3b8;
+    font-size: 14px;
+    font-style: italic;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* ======== EDIT MODE — Form Grid ======== */
+.po-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
+}
+
+.po-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.po-form-group--full {
+    grid-column: 1 / -1;
+}
+
+.po-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-required {
+    color: #ef4444;
+}
+
+.po-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #1e293b;
+    background: #fff;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.po-input:focus {
+    border-color: #2D4478;
+    box-shadow: 0 0 0 3px rgba(45, 68, 120, 0.1);
+}
+
+.po-input::placeholder {
+    color: #a0aec0;
+}
+
+.po-input:disabled {
+    background: #f7f8fa;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.po-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232D4478' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+/* ======== Institute Edit Cards ======== */
+.po-institute-edit-card {
+    background: #f8f9fc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+}
+
+.po-institute-edit-card:hover {
+    border-color: #c5cbda;
+}
+
+.po-institute-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.po-institute-edit-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2D4478;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.po-btn-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.po-btn-icon--danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.po-btn-icon--danger:hover {
+    background: #fecaca;
+}
+
+/* Checkboxes */
+.po-checkboxes {
+    display: flex;
+    gap: 24px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.po-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #475569;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    user-select: none;
+}
+
+.po-checkbox {
+    display: none;
+}
+
+.po-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c5cbda;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.po-checkbox-custom::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.15s ease;
+}
+
+.po-checkbox:checked+.po-checkbox-custom {
+    background: #2D4478;
+    border-color: #2D4478;
+}
+
+.po-checkbox:checked+.po-checkbox-custom::after {
+    transform: rotate(45deg) scale(1);
+}
+
+/* ======== Buttons ======== */
+.po-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    align-items: center;
+}
+
+.po-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.po-btn:active {
+    transform: scale(0.97);
+}
+
+.po-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.po-btn--primary {
+    background: linear-gradient(135deg, #16A767, #12904f);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(22, 167, 103, 0.25);
+}
+
+.po-btn--primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #12904f, #0e7a42);
+    box-shadow: 0 4px 14px rgba(22, 167, 103, 0.35);
+}
+
+.po-btn--secondary {
+    background: #2D4478;
+    color: #fff;
+}
+
+.po-btn--secondary:hover {
+    background: #3b5998;
+}
+
+.po-btn--outline {
+    background: transparent;
+    color: #2D4478;
+    border: 1.5px dashed #c5cbda;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.po-btn--outline:hover {
+    border-color: #2D4478;
+    background: #f0f4ff;
+}
+
+/* ======== STEP 2 PAGE ======== */
+.step2-root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f6f8fc;
+}
+
+.step2-page-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 48px;
+}
+
+.step2-page-wrap .po-page {
+    width: 100%;
+    max-width: 720px;
+    padding: 0;
+    animation: poFadeIn 0.3s ease;
+}
+
+.step2-subtitle {
+    color: #64748b;
+    font-size: 14px;
+    margin: -12px 0 20px 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 768px) {
+    .po-page {
+        padding: 0 12px 24px 12px;
+    }
+
+    .po-card {
+        padding: 20px 16px;
+    }
+
+    .po-profile-grid,
+    .po-form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .po-field--full,
+    .po-form-group--full {
+        grid-column: 1;
+    }
+
+    .po-institute-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .po-institute-badges {
+        justify-content: flex-start;
+    }
+
+    .po-actions {
+        flex-direction: column;
+    }
+
+    .po-btn {
+        width: 100%;
+    }
+}

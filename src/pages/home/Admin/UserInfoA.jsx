@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../../../components/NavBar";
+import api from "../../../services/api";
 
 function UserInfoA() {
   const { id } = useParams();
@@ -12,11 +12,7 @@ function UserInfoA() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`https://api.pps.makalabox.com/api/user/account/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
+        const response = await api.get(`/api/user/account/${id}`);
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -40,9 +36,9 @@ function UserInfoA() {
       for (let i = 0; i < selectedItems.length; i++) {
         const [itemId, stage] = selectedItems[i].split('-');
         const requestData = { idBag: [{ id: itemId }] };
-        const url = `https://api.pps.makalabox.com/api/admin/${stage}/${action}`;
+        const url = `/api/admin/${stage}/${action}`;
         const method = action === 'delete' ? 'delete' : 'put';
-        await axios({
+        await api({
           method,
           url,
           headers: {

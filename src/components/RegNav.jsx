@@ -9,6 +9,7 @@ const RegNav = () => {
         <Link to="/Ural" className="head__item Montherat">Научно-исследовательская деятельность</Link>
         <Link to="/Education" className="head__item Montherat">Инновационно-образовательная деятельность</Link>
         <Link to="/Social" className="head__item Montherat">Воспитательная, общественная деятельность</Link>
+        <Link to="/awards" className="head__item Montherat">Награды</Link>
       </div>
     </>
   );

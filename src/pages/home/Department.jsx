@@ -1,5 +1,5 @@
-import axios from "axios";
 import NavBar from "../../components/NavBar";
+import api from "../../services/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +12,7 @@ function Department() {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await axios.get(`https://api.pps.makalabox.com/api/rating/institute/${id}`);
+        const response = await api.get(`/api/rating/institute/${id}`);
         const data = response.data;
         const usersObject = data[0];
         const usersArray = Object.values(usersObject).sort((a, b) => b.sum - a.sum);

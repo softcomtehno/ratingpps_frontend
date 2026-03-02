@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import axios from "axios";
 import NavBar from "../../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 function Registration() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function Registration() {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    axios.post('https://api.pps.makalabox.com/pps/sign-up', {
+    api.post('/pps/sign-up', {
       "username": name,
       "password": password,
     })

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import NavBar from '../../../components/NavBar';
+import api from '../../../services/api';
 
 const Rating = () => {
   const token = localStorage.getItem('token');
@@ -13,11 +13,7 @@ const Rating = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/rating/question/get/innovative', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get('/api/rating/question/get/innovative');
         setData(response.data.innovative);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -26,11 +22,7 @@ const Rating = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`https://api.pps.makalabox.com/api/rating/question/3/${selectedAward}/${selectedSubtitle}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get(`/api/rating/question/3/${selectedAward}/${selectedSubtitle}`);
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

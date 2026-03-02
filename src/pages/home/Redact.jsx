@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../../components/NavBar";
 import BackButton from "../../components/Back";
+import api from "../../services/api";
 
 const Redact = () => {
   const { id } = useParams();
@@ -14,11 +14,7 @@ const Redact = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const resp = await axios.get(`https://api.pps.makalabox.com/api/user/account/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
+        const resp = await api.get(`/api/user/account/${id}`)
         const data = resp.data;
         setUserData(data);
         const initialEditedLinks = {};
@@ -54,11 +50,7 @@ const Redact = () => {
           stage: item.stage
         };
       });
-      await axios.put(`https://api.pps.makalabox.com/api/user/account/award/edit`, { bag }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await api.put(`/api/user/account/award/edit`, { bag });
       location.reload();
 
     } catch (error) {

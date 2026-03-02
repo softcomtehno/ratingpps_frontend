@@ -1,8 +1,8 @@
 import NavBar from "../../components/NavBar";
 import BackButton from "../../components/Back";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../../services/api";
 
 function Rating_ppsm() {
   const [userData, setUserData] = useState([]);
@@ -12,7 +12,7 @@ function Rating_ppsm() {
   useEffect(() => {
     const userInfo = async () => {
       try {
-        const resp = await axios.get('https://api.pps.makalabox.com/api/rating/pps');
+        const resp = await api.get('/api/rating/pps');
         const sortedData = Object.values(resp.data.pps).sort((a, b) => b.sum - a.sum);
         setUserData(sortedData);
         console.log("Fetched and sorted data:", sortedData);
