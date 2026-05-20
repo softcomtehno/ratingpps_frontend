@@ -1,17 +1,33 @@
+html, body {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
 .private-office-bg {
   width: 100%;
   background-size: cover;
 }
+
+/* === MAIN LAYOUT === */
 .private-office__main {
   display: flex;
+  gap: 16px;
+  min-height: calc(100vh - 80px); /* если хедер другой высоты — поменяй */
+  align-items: stretch;
 }
+
+/* LEFT SIDEBAR */
 .account__config {
   background-color: #2D4478;
   margin-top: 17px;
   padding: 0 0 12px 0;
-  height: revert-layer;
-  width: 28%;
+  width: 320px;           /* было 28% — на больших экранах это странно */
+  flex: 0 0 320px;
+  box-sizing: border-box;
 }
+
+/* avatar */
 .avatar__container {
   background-color: #fff;
   border-radius: 100%;
@@ -29,6 +45,7 @@
   background: url('../img/user.png') no-repeat;
   background-size: 175px 175px;
 }
+
 .user__name {
   color: #FFF;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -37,14 +54,20 @@
   padding: 12.5px 0 10px 0;
   text-align: center;
 }
+
+/* !!! Важно: убираем 100vh — он ломает высоту и создаёт пустоты */
 .config__list {
   list-style: none;
   text-align: center;
-  height: 100vh;
+  padding: 0;
+  margin: 0;
 }
+
+/* items */
 .config__items-li {
   padding: 12.5px 0 12.5px 0;
 }
+
 .config__items {
   color: #FFF;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -55,26 +78,45 @@
   padding: 12.5px 0 12.5px 0;
   cursor: pointer;
   text-decoration: none;
+  display: inline-block;
 }
 .config__items:hover {
   border-bottom: 2px #fff solid;
 }
+
+/* RIGHT CONTENT */
+.office {
+  margin-top: 17px;
+  flex: 1 1 auto;
+  min-width: 0; /* чтобы не было горизонтального скролла */
+}
+
 .office h3 {
   display: block;
   margin: 0 0 8px 15px;
 }
-.office {
-  margin-top: 17px;
-}
+
+/* Контейнер формы: делаем нормальное заполнение пространства */
 .office__in {
-  display: flex;
-  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  display: block; /* было flex-row — из-за этого всё уезжало */
+  min-height: calc(100vh - 160px);
 }
+
+/* form */
 .form {
-  margin-left: 15px;
+  margin-left: 0; /* было 15px, из-за этого блок визуально "съезжал" */
+  max-width: 980px; /* можно увеличить/уменьшить */
+  width: 100%;
 }
+
+/* inputs */
 .input__office {
-  width: 436px;
+  width: 100%;                 /* было 436px — ломало мобилку */
+  max-width: 520px;            /* держим аккуратную ширину на десктопе */
   height: 46px;
   border: none;
   box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
@@ -82,11 +124,14 @@
   margin: 5px 0 5px 0;
   border: 1px solid #2D4478;
   border-radius: 7.5px;
-  padding-left: 3px;
+  padding-left: 10px;
+  box-sizing: border-box;
 }
-.input__office>.input__text-s{
+
+.input__office > .input__text-s {
   padding: 10px;
 }
+
 .input__text-s {
   color: #2D4478;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -94,12 +139,16 @@
   font-style: normal;
   line-height: normal;
 }
+
+/* buttons */
 .btn__office {
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin: 20% 0 0 28%;
 }
+
+/* кнопки лучше делать inline-flex чтобы не прыгали */
 .btn__link {
   color: #FFF;
   text-align: center;
@@ -111,7 +160,9 @@
   border: none;
   cursor: pointer;
   margin: 15px 15px 0 0;
+  border-radius: 6px;
 }
+
 .btn__blue {
   background-color: #2D4478;
 }
@@ -122,6 +173,8 @@
 .btn__green-a {
   background-color: #16A767;
 }
+
+/* menus (оставил как было, но чуть безопаснее) */
 .header__menu {
   margin: 0 0 30px 17px;
   width: 848.58px;
@@ -146,6 +199,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .head__item {
   text-align: center;
   justify-content: center;
@@ -171,6 +225,40 @@
   background-image: url(../img/RectangleStart.png);
 }
 
+/* === ADAPTIVE === */
+@media (max-width: 1024px) {
+  .account__config {
+    width: 280px;
+    flex-basis: 280px;
+  }
+  .input__office {
+    max-width: 100%;
+  }
+  .office__in {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .private-office__main {
+    flex-direction: column;
+  }
+
+  .account__config {
+    width: 100%;
+    flex: none;
+  }
+
+  .office {
+    margin-top: 0;
+  }
+
+  .office__in {
+    min-height: auto;
+    overflow-y: visible;
+  }
+}
+
 @media (max-width: 720px) {
   .header__menu-s {
     margin: 10px auto 30px auto;
@@ -178,11 +266,28 @@
     gap: 15px;
     flex-wrap: wrap;
   }
-
-  @media (max-width: 570px) {
-    .header__menu-s {
-      width: 300px;
-    }
-  }
 }
 
+@media (max-width: 570px) {
+  .header__menu-s {
+    width: 300px;
+  }
+
+  /* чтобы кнопки не уезжали и были видны */
+  .btn__link {
+    width: 100%;
+    margin: 10px 0 0 0;
+  }
+
+  .btn__green {
+    margin-left: 0;
+  }
+  html, body {
+    height: auto;
+    overflow-y: auto;
+  }
+  
+  .private-office-contents {
+    min-height: 100vh;
+  }
+}

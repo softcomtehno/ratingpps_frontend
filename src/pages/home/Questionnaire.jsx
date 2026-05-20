@@ -1,13 +1,14 @@
 import { useCallback, useState, useEffect } from "react";
+import api from '../../services/api';
 import NavBar from "../../components/NavBar";
 import RegNav from "../../components/RegNav";
 import AccountConf from "../../components/AccountConf";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import useAuthToken from "../../hooks/useAuthToken";
 
 function Questionnaire() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [userData, setUserData] = useState(null);
   const [institutes, setInstitutes] = useState([]);
   const [positions, setPositions] = useState([]);
@@ -26,11 +27,7 @@ function Questionnaire() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/user/name', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get('/api/teacher/name');
         const user = response.data.user;
         setUserData(user);
         setIsAuthenticated(true);
@@ -41,11 +38,7 @@ function Questionnaire() {
 
     const fetchData = async () => {
       try {
-        const infoResponse = await axios.get('https://api.pps.makalabox.com/api/user/info', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const infoResponse = await api.get('/api/user/info');
         setInstitutes(infoResponse.data.institutes);
         setUniversities(infoResponse.data.university);
         setPositions(infoResponse.data.position);
@@ -92,12 +85,7 @@ function Questionnaire() {
       email,
     };
 
-    axios.post('https://api.pps.makalabox.com/api/user/info/add', dataToSend, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    api.post('/api/user/info/add', dataToSend)
       .then(function (response) {
         console.log(response);
         setIsAuthenticated(true);

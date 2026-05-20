@@ -1,82 +1,101 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import api from '../services/api';
+import { Link } from "react-router-dom";
+import useAuthToken from "../hooks/useAuthToken";
 
 const NavBar = () => {
-  const [isAdmin, setIsAdmin] = useState('')
-  const token = localStorage.getItem('token');
+  const [role, setRole] = useState("visitor");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const token = useAuthToken();
 
   useEffect(() => {
-    const getUserRole = async () => {
+    const load = async () => {
+      // 1) Роль
       try {
-        const response = await axios.get("https://api.pps.makalabox.com/api/get/role", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        const res = await api.get("/api/get/role", {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
-        if (response.status === 200) {
-          setIsAdmin(response.data.role);
-        }
-      } catch (error) {
-        setIsAdmin('Null');
-        console.log('Какая-то ошибка');
+        setRole(res?.data?.role ?? "visitor");
+      } catch {
+        setRole("visitor");
       }
     };
 
-    getUserRole()
+    load();
   }, [token]);
 
+  // Меню для ролей (чтобы не дублировать 4 раза одно и то же)
+  const menuByRole = {
+    visitor: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+    ],
+    teacher: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+    ],
+    director: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+      { to: "/director", label: "Панель директора" },
+    ],
+    admin: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+      { to: "/admin", label: "Админ Панель" },
+    ],
+    expert: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+      { to: "/expert", label: "Панель эксперта" },
+    ],
+  };
+
+  const burgerItems = menuByRole[role] ?? menuByRole.visitor;
+
   return (
-    <nav className='nav'>
+    <nav className="nav">
       <div className="nav__in">
-        <Link to="/" className='nav__title'><h2>Рейтинг ППС!</h2></Link>
-        <ul className='nav__list'>
-          <li><Link to="/">Главная</Link></li>
-          <li><Link to="/MUIT">МУИТ</Link></li>
-          <li><Link to="/COMTEH">Комтехно</Link></li>
-          <li><Link to="/KITE">КИТЭ</Link></li>
+        <Link to="/" className="nav__title">
+          <h2>Рейтинг ППС!</h2>
+        </Link>
+
+        <ul className="nav__list" style={{ justifyContent: 'flex-end' }}>
+          <li>
+            <Link to="/">Главная</Link>
+          </li>
+
+          {/* Бургер */}
           <li>
             <div className="hamburger-menu">
-              <input id="menu__toggle" type="checkbox" />
-              {isAdmin === 'Null' && (
-                <>
-                  <input id="menu__toggle" type="checkbox" />
-                  <ul className="menu__box">
-                    <li><Link to="/LPPS" className="menu__item">Список ППС</Link></li>
-                    <li><Link to="/Authorization" className="menu__item">Авторизация</Link></li>
-                    {/* <li><Link to="/Questionnaire" className="menu__item">Анкета институтов</Link></li> */}
-                  </ul>
-                </>
-              )}
-              {isAdmin === 'user' && (
-                <>
-                  <input id="menu__toggle" type="checkbox" />
-                  <ul className="menu__box">
-                    <li><Link to="/LPPS" className="menu__item">Список ППС</Link></li>
-                    <li><Link to="/Authorization" className="menu__item">Авторизация</Link></li>
-                    {/* <li><Link to="/Questionnaire" className="menu__item">Анкета институтов</Link></li> */}
-                    <li><Link to="/private_office" className="menu__item">Личный кабинет</Link></li>
-                  </ul>
-                </>
-              )}
-              {isAdmin === 'admin' && (
-                <>
-                  <input id="menu__toggle" type="checkbox" />
-                  <ul className="menu__box">
-                    <li><Link to="/LPPS" className="menu__item">Список ППС</Link></li>
-                    <li><Link to="/Authorization" className="menu__item">Авторизация</Link></li>
-                    {/* <li><Link to="/Questionnaire" className="menu__item">Анкета институтов</Link></li> */}
-                    <li><Link to="/private_office" className="menu__item">Личный кабинет</Link></li>
-                    <li><Link to="/admin" className="menu__item">Админ Панель</Link></li>
-                  </ul>
-                </>
-              )}
+              <button
+                type="button"
+                className="menu__toggle"
+                aria-label="Открыть меню"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                ☰
+              </button>
+              <ul className={`menu__box ${menuOpen ? "menu__box--open" : ""}`}>
+                {burgerItems.map((item) => (
+                  <li key={item.to}>
+                    <Link to={item.to} className="menu__item" onClick={() => setMenuOpen(false)}>
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </li>
         </ul>
       </div>
     </nav>
   );
-}
+};
 
 export default NavBar;

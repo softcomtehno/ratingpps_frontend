@@ -1,0 +1,495 @@
+/* ═══════════════════════════════════════════════════════════════
+   AdminDirectors.css  —  Directors management page
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    --ad-accent: #2D4478;
+    --ad-accent-light: #e0e7ff;
+    --ad-danger: #ef4444;
+    --ad-danger-hover: #dc2626;
+    --ad-success: #10b981;
+    --ad-radius: 14px;
+    --ad-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Root ──────────────────────────────────────────────────────── */
+.ad-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f4f6fb;
+}
+
+.ad-container {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 16px 60px;
+    box-sizing: border-box;
+}
+
+/* ── Page header ───────────────────────────────────────────────── */
+.ad-header {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.ad-header__left {
+    flex: 1;
+}
+
+.ad-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ad-accent);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ad-title__icon {
+    font-size: 30px;
+}
+
+.ad-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ── Institutes grid ───────────────────────────────────────────── */
+.ad-institutes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Institute card ────────────────────────────────────────────── */
+.ad-card {
+    background: #fff;
+    border-radius: var(--ad-radius);
+    box-shadow: var(--ad-shadow);
+    overflow: hidden;
+}
+
+.ad-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, var(--ad-accent) 0%, #3b5ab8 100%);
+    color: #fff;
+}
+
+.ad-card__title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.ad-card__count {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+/* ── Directors list ────────────────────────────────────────────── */
+.ad-directors-list {
+    padding: 8px 0;
+}
+
+.ad-director-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.15s;
+}
+
+.ad-director-row:last-child {
+    border-bottom: none;
+}
+
+.ad-director-row:hover {
+    background: #fafafa;
+}
+
+.ad-director-row__info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ad-director-row__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ad-accent-light);
+    color: var(--ad-accent);
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ad-director-row__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 2px;
+}
+
+.ad-director-row__email {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────── */
+.ad-btn {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.ad-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ad-btn:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+.ad-btn--add {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+.ad-btn--add:not(:disabled):hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.ad-btn--delete {
+    background: #fef2f2;
+    color: var(--ad-danger);
+    font-size: 13px;
+    padding: 7px 14px;
+}
+
+.ad-btn--delete:not(:disabled):hover {
+    background: var(--ad-danger);
+    color: #fff;
+}
+
+.ad-btn--cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.ad-btn--cancel:not(:disabled):hover {
+    background: #e5e7eb;
+}
+
+.ad-btn--confirm {
+    background: var(--ad-accent);
+    color: #fff;
+}
+
+.ad-btn--confirm:not(:disabled):hover {
+    background: var(--ad-active, #1a3060);
+}
+
+.ad-btn--main {
+    background: var(--ad-accent);
+    color: #fff;
+    padding: 11px 22px;
+    flex-shrink: 0;
+}
+
+.ad-btn--main:not(:disabled):hover {
+    background: #1a3060;
+}
+
+/* ── Empty state ───────────────────────────────────────────────── */
+.ad-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 80px 24px;
+    background: #fff;
+    border-radius: var(--ad-radius);
+    box-shadow: var(--ad-shadow);
+    color: #9ca3af;
+    font-size: 16px;
+    text-align: center;
+}
+
+.ad-empty__icon {
+    font-size: 52px;
+}
+
+/* ── No directors placeholder ──────────────────────────────────── */
+.ad-no-directors {
+    padding: 16px 24px;
+    color: #9ca3af;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* ── Alerts ────────────────────────────────────────────────────── */
+.ad-alert {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+.ad-alert--error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ad-alert--success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* ── Modal overlay ─────────────────────────────────────────────── */
+.ad-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 16px;
+}
+
+.ad-modal {
+    background: #fff;
+    border-radius: var(--ad-radius);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+    width: 100%;
+    max-width: 480px;
+    animation: ad-modal-in 0.2s ease;
+}
+
+@keyframes ad-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.ad-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+}
+
+.ad-modal__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ad-accent);
+    margin: 0;
+}
+
+.ad-modal__close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.ad-modal__close:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.ad-modal__inst-name {
+    margin: 6px 24px 0;
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.ad-modal__body {
+    padding: 20px 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ad-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.ad-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1f2937;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.ad-select:focus {
+    border-color: var(--ad-accent);
+}
+
+.ad-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 24px 24px;
+}
+
+/* ── Adjustments panel (AdminExperts) ─────────────────────────── */
+.ad-adjustments {
+    margin-top: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+}
+
+.ad-adjustments__header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+}
+
+.ad-adjustments__title {
+    margin: 0;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ad-adjustments__table-wrap {
+    max-height: 62vh;
+    overflow: auto;
+}
+
+.ad-adjustments__table {
+    width: 100%;
+    min-width: 860px;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: #0f172a;
+    background: #ffffff;
+}
+
+.ad-adjustments__table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align: left;
+    padding: 12px 14px;
+    background: #f8fafc;
+    color: #334155;
+    border-bottom: 1px solid #dbe2ea;
+    font-weight: 700;
+}
+
+.ad-adjustments__table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: top;
+    color: #111827;
+}
+
+.ad-adjustments__table tbody tr:nth-child(even) {
+    background: #fcfdff;
+}
+
+.ad-adjustments__row--inactive {
+    opacity: 0.58;
+}
+
+.ad-adjustments__points--plus {
+    color: #15803d;
+    font-weight: 700;
+}
+
+.ad-adjustments__points--minus {
+    color: #b91c1c;
+    font-weight: 700;
+}
+
+.ad-adjustments__status-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ad-adjustments__status-btn--freeze {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ad-adjustments__status-btn--unfreeze {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .ad-card__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .ad-director-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .ad-adjustments__table-wrap {
+        max-height: 58vh;
+    }
+}

@@ -1,0 +1,210 @@
+/* =============================================
+   USER PROFILE PAGE — UserInfo.jsx
+   ============================================= */
+
+.up-page {
+    flex: 1;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Wrapper so the page fills the space below NavBar */
+.up-wrapper {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+}
+
+/* ── Profile card ── */
+.up-profile-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.up-profile-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, #3b82f6, #6366f1);
+    border-radius: 16px 0 0 16px;
+}
+
+.up-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.up-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1e1b4b;
+    margin: 0 0 4px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-position {
+    font-size: 14px;
+    color: #5b5bd6;
+    font-weight: 600;
+    margin: 0 0 12px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.up-meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #c7d2fe;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-meta-chip--regular {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: #a5b4fc;
+    color: #3730a3;
+    font-weight: 600;
+}
+
+/* ── Stats ── */
+.up-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.up-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 8px 18px;
+}
+
+.up-stat__val {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-stat__val--frozen {
+    color: #6366f1;
+}
+
+.up-stat__label {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 2px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Freeze button (admin-only) ── */
+.up-btn--freeze {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e0e7ff;
+    color: #3730a3;
+    transition: background 0.2s, transform 0.15s;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-btn--freeze:hover {
+    background: #c7d2fe;
+    transform: translateY(-1px);
+}
+
+/* ── Teacher name link (in director pages) ── */
+.dt-teacher__name a,
+.dir-teacher-row__name a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s, text-decoration 0.15s;
+}
+
+.dt-teacher__name a:hover,
+.dir-teacher-row__name a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .up-page {
+        padding: 16px;
+    }
+
+    .up-profile-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px 16px 20px 20px;
+    }
+
+    .up-meta {
+        justify-content: center;
+    }
+
+    .up-stats {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,40 +1,23 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
 import { Navigate, Outlet } from "react-router-dom";
+import useAuthToken from "../hooks/useAuthToken";
+import useUserRole from "../hooks/useUserRole";
 
-const PrivateRoute = () => {
-  const token = localStorage.getItem('token');
-  const [userRole, setUserRole] = useState(null);
+export default function PrivateRoute({ allowedRoles = [], children }) {
+  const token = useAuthToken();
+  const { role, loading } = useUserRole(token);
 
-  useEffect(() => {
-    const getUserRole = async () => {
-      try {
-        const response = await axios.get("https://api.pps.makalabox.com/api/get/role", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.log(error);
-        setUserRole(false);
-      }
-    };
-
-    if (token) {
-      getUserRole();
-    } else {
-      setUserRole(null);
-    }
-  }, [token]);
-
-  if (userRole === 'user') {
-    return <Outlet />;
-  } else if (userRole === null) {
-    return <div className="Edu__text-L center">Loading...</div>;
-  } else {
-    return <Navigate to="/Authorization" />;
+  if (!token) {
+    return <Navigate to="/Authorization" replace />;
   }
-};
 
-export default PrivateRoute;
+  if (loading) {
+    return <div style={{ padding: 20, textAlign: "center" }}>Проверка входа...</div>;
+  }
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return <Navigate to="/Authorization" replace />;
+  }
+
+  return children || <Outlet />;
+}

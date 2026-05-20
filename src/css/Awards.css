@@ -1,0 +1,401 @@
+/* ============================================
+   AWARDS PAGE — Stage Tabs + Accordion
+   ============================================ */
+
+/* ============================================
+   STAGE NAV — Two-group navigation
+   ============================================ */
+
+.stage-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 10px 0 20px 10px;
+}
+
+/* Group row */
+.stage-nav__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+/* Profile group — visually lighter, on its own row */
+.stage-nav__group--profile {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* Divider line between profile and stages */
+.stage-nav__divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0 0 0;
+}
+
+/* Base tab */
+.stage-nav__tab {
+  position: relative;
+  padding: 10px 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #2D4478;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  text-align: center;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.stage-nav__tab:hover {
+  background: #3b5998;
+}
+
+.stage-nav__tab.active {
+  background: #16A767;
+  box-shadow: 0 2px 10px rgba(22, 167, 103, 0.35);
+}
+
+/* Profile tabs — distinct appearance */
+.stage-nav__tab--profile {
+  background: #1e2e56;
+  font-size: 13px;
+  padding: 9px 20px;
+  opacity: 0.85;
+  border-bottom: 2px solid transparent;
+}
+
+.stage-nav__tab--profile:hover {
+  background: #253769;
+  opacity: 1;
+}
+
+.stage-nav__tab--profile.active {
+  background: #16A767;
+  opacity: 1;
+  border-bottom-color: #0e7a42;
+}
+
+/* First/last rounding per group */
+.stage-nav__group--profile .stage-nav__tab:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.stage-nav__group--profile .stage-nav__tab:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.stage-nav__group--stages .stage-nav__tab:first-child {
+  border-radius: 0 0 0 8px;
+}
+
+.stage-nav__group--stages .stage-nav__tab:last-child {
+  border-radius: 0 0 8px 0;
+}
+
+/* When no stages — profile tabs get full corners */
+.stage-nav__group--profile:only-child .stage-nav__tab:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.stage-nav__group--profile:only-child .stage-nav__tab:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* Stage tabs row */
+.stage-nav__group--stages .stage-nav__tab {
+  font-size: 13px;
+  padding: 10px 20px;
+}
+
+/* ============================================
+   Legacy: awards-stage-tabs (kept for compat)
+   ============================================ */
+
+/* Stage tab buttons at the top */
+.awards-stage-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 10px 0 24px 10px;
+}
+
+.awards-stage-tab {
+  position: relative;
+  padding: 12px 22px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #2D4478;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s, box-shadow 0.25s, transform 0.15s;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.3;
+  min-width: 140px;
+}
+
+.awards-stage-tab:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.awards-stage-tab:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.awards-stage-tab:hover {
+  background: #3b5998;
+}
+
+.awards-stage-tab.active {
+  background: #16A767;
+  box-shadow: 0 2px 12px rgba(22, 167, 103, 0.35);
+}
+
+/* Main content area */
+.awards-content {
+  padding: 0 16px 24px 16px;
+  max-width: 960px;
+}
+
+.awards-loading {
+  text-align: center;
+  color: #2D4478;
+  padding: 40px 20px;
+  font-size: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.awards-error {
+  color: #b61111;
+  text-align: center;
+  padding: 20px;
+  font-size: 15px;
+}
+
+/* Title accordion */
+.awards-title-block {
+  margin-bottom: 12px;
+  border: 1px solid #dde1ea;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s;
+}
+
+.awards-title-block:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.awards-title-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  background: #f5f7fb;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2D4478;
+  transition: background 0.2s;
+}
+
+.awards-title-header:hover {
+  background: #edf0f7;
+}
+
+.awards-title-arrow {
+  font-size: 12px;
+  transition: transform 0.25s;
+  color: #2D4478;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.awards-title-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Subtitle rows */
+.awards-subtitles {
+  padding: 0 18px 14px 18px;
+  animation: awardsSlideDown 0.25s ease;
+}
+
+@keyframes awardsSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.awards-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f1f5;
+}
+
+.awards-subtitle-row:last-child {
+  border-bottom: none;
+}
+
+.awards-subtitle-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  color: #2D4478;
+  line-height: 1.4;
+}
+
+.awards-subtitle-input {
+  flex: 0 0 320px;
+  height: 40px;
+  border: 1px solid #c5cbda;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #2D4478;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.awards-subtitle-input:focus {
+  border-color: #2D4478;
+  box-shadow: 0 0 0 3px rgba(45, 68, 120, 0.12);
+}
+
+.awards-subtitle-input::placeholder {
+  color: #a0a8be;
+}
+
+/* Submit area */
+.awards-actions {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 0 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.awards-submit-btn {
+  padding: 12px 36px;
+  background: #16A767;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.awards-submit-btn:hover:not(:disabled) {
+  background: #12904f;
+  transform: translateY(-1px);
+}
+
+.awards-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.awards-back-btn {
+  padding: 12px 36px;
+  background: #2D4478;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background 0.2s;
+}
+
+.awards-back-btn:hover {
+  background: #3b5998;
+}
+
+.awards-success-msg {
+  color: #16A767;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.awards-error-msg {
+  color: #b61111;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .awards-subtitle-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .awards-subtitle-input {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .awards-stage-tabs {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 10px 20px 10px;
+  }
+
+  .awards-stage-tab {
+    border-radius: 6px !important;
+    min-width: auto;
+    flex: 1 1 45%;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .awards-stage-tab {
+    flex: 1 1 100%;
+  }
+
+  .awards-content {
+    padding: 0 8px 16px 8px;
+  }
+
+  .awards-actions {
+    flex-direction: column;
+  }
+
+  .awards-submit-btn,
+  .awards-back-btn {
+    width: 100%;
+  }
+}

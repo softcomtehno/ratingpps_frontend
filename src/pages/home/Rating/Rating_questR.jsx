@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../../services/api';
 import { Link } from 'react-router-dom';
 import NavBar from '../../../components/NavBar';
+import useAuthToken from '../../../hooks/useAuthToken';
 
 const Rating = () => {
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([])
   const [selectedAward, setSelectedAward] = useState(1);
@@ -13,11 +14,7 @@ const Rating = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://api.pps.makalabox.com/api/rating/question/get/research', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get('/api/rating/question/get/research');
         setData(response.data.research);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -26,11 +23,7 @@ const Rating = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`https://api.pps.makalabox.com/api/rating/question/2/${selectedAward}/${selectedSubtitle}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await api.get(`/api/rating/question/2/${selectedAward}/${selectedSubtitle}`);
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

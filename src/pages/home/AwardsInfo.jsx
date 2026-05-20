@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
+import api from '../../services/api';
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../../components/NavBar";
+import useAuthToken from "../../hooks/useAuthToken";
 
 function AwardsInfo() {
   const { id } = useParams();
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [userData, setUserData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const resp = await axios.get(`https://api.pps.makalabox.com/api/user/account/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
+        const resp = await api.get(`/api/user/account/${id}`);
         const data = resp.data;
         setUserData(data);
       } catch (error) {
@@ -40,9 +37,9 @@ function AwardsInfo() {
       for (let i = 0; i < selectedItems.length; i++) {
         const [itemId, stage] = selectedItems[i].split('-');
         const requestData = { idBag: [{ id: itemId }] };
-        const url = `https://api.pps.makalabox.com/api/user/account/${stage}/${action}`;
+        const url = `/api/user/account/${stage}/${action}`;
         const method = action === 'delete' ? 'delete' : 'put';
-        await axios({
+        await api({
           method,
           url,
           headers: {

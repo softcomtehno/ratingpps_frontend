@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import NavBar from "../../../components/NavBar";
-import axios from "axios";
+import api from "../../../services/api";
 
 function Offence() {
   const [users, setUsers] = useState([]);
@@ -9,13 +9,7 @@ function Offence() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get("https://api.pps.makalabox.com/api/admin/offence",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const response = await api.get("/api/admin/offence");
       setUsers(response.data.offence);
       setOpenStates(new Array(response.data.offence.length).fill(false)); // Создаем массив с длиной, равной количеству пользователей, и заполняем его false
     } catch (error) {
@@ -63,13 +57,7 @@ function Offence() {
           formattedData.offence[`${+userId}_${optionId}`] = { userId: +userId, id: optionId, quantity };
         }
       }
-      const response = await axios.post("https://api.pps.makalabox.com/api/admin/offence/add", formattedData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const response = await api.post("/api/admin/offence/add", formattedData);
       setSelectedOptions({});
       console.log(response.data);
     } catch (error) {

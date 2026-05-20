@@ -1,5 +1,5 @@
-import axios from "axios";
 import NavBar from "../../components/NavBar";
+import api from "../../services/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +12,7 @@ function Department() {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await axios.get(`https://api.pps.makalabox.com/api/rating/institute/${id}`);
+        const response = await api.get(`/api/rating/institute/${id}`);
         const data = response.data;
         const usersObject = data[0];
         const usersArray = Object.values(usersObject).sort((a, b) => b.sum - a.sum);
@@ -73,6 +73,7 @@ function Department() {
               <th className="sorter" onClick={() => sortData('researchPoints')}>II. Научно-исследовательская деятельность</th>
               <th className="sorter" onClick={() => sortData('innovativePoints')}>III. Инновационно-образовательная деятельность</th>
               <th className="sorter" onClick={() => sortData('socialPoints')}>IV. Воспитательная, общественная деятельность</th>
+              <th className="sorter" onClick={() => sortData('expertPoints')}>Баллы экспертов</th>
               <th className="sorter" onClick={() => sortData('sum')}>Итого</th>
             </tr>
           </thead>
@@ -86,6 +87,7 @@ function Department() {
                 <td>{user.researchPoints}</td>
                 <td>{user.innovativePoints}</td>
                 <td>{user.socialPoints}</td>
+                <td>{user.expertPoints ?? 0}</td>
                 <td>{user.sum}</td>
               </tr>
             ))}

@@ -1,28 +1,31 @@
 import NavBar from "../../components/NavBar";
 import BackButton from "../../components/Back";
+import YearSelector from "../../components/YearSelector";
+import { useYears } from "../../hooks/useYears";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../../services/api";
 
 function Rating_ppsm() {
   const [userData, setUserData] = useState([]);
   const [sortedField, setSortedField] = useState('sum');
   const [searchInput, setSearchInput] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
 
   useEffect(() => {
-    const userInfo = async () => {
-      try {
-        const resp = await axios.get('https://api.pps.makalabox.com/api/rating/pps');
+    if (yearsLoading) return;
+    setLoading(true);
+    const params = selectedYear ? { yearId: selectedYear.id } : {};
+    api.get('/api/rating/pps', { params })
+      .then(resp => {
         const sortedData = Object.values(resp.data.pps).sort((a, b) => b.sum - a.sum);
         setUserData(sortedData);
-        console.log("Fetched and sorted data:", sortedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    userInfo();
-  }, []);
+      })
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false));
+  }, [selectedYear, yearsLoading]);
 
   const sortData = (field) => {
     const sortedData = [...userData].sort((a, b) => b[field] - a[field]);
@@ -47,11 +50,11 @@ function Rating_ppsm() {
         <div className="title__table-un">
           <h2 className="Edu__text-L">Рейтинг ППС</h2>
           <label htmlFor="" className="search__label">
-            <input 
-              type="text" 
-              className="search__input-rating" 
-              value={searchInput} 
-              onChange={handleSearch} 
+            <input
+              type="text"
+              className="search__input-rating"
+              value={searchInput}
+              onChange={handleSearch}
               placeholder="Поиск по ФИО"
             />
             <div className="search__btn-rating">
@@ -59,36 +62,48 @@ function Rating_ppsm() {
             </div>
           </label>
         </div>
-        <div className="sort-buttons">
-        </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>№</th>
-              <th>ФИО</th>
-              <th>Институты</th>
-              <th className="sorter" onClick={() => sortData('awardPoints')}>I. Личные достижения</th>
-              <th className="sorter" onClick={() => sortData('researchPoints')}>II. Научно-исследовательская деятельность</th>
-              <th className="sorter" onClick={() => sortData('innovativePoints')}>III. Инновационно-образовательная деятельность</th>
-              <th className="sorter" onClick={() => sortData('socialPoints')}>IV. Воспитательная, общественная деятельность</th>
-              <th className="sorter" onClick={() => sortData('sum')}>Итого</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((data, i) => (
-              <tr key={data.id}>
-                <td>{i + 1}</td>
-                <td><Link to={`/user/${data.id}`}>{data.name}</Link></td>
-                <td>{data.institute}</td>
-                <td>{data.awardPoints}</td>
-                <td>{data.researchPoints}</td>
-                <td>{data.innovativePoints}</td>
-                <td>{data.socialPoints}</td>
-                <td>{data.sum}</td>
+
+        <YearSelector
+          years={years}
+          selectedYear={selectedYear}
+          onChange={setSelectedYear}
+          loading={yearsLoading}
+        />
+
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>Загрузка...</div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>ФИО</th>
+                <th>Институты</th>
+                <th className="sorter" onClick={() => sortData('awardPoints')}>I. Личные достижения</th>
+                <th className="sorter" onClick={() => sortData('researchPoints')}>II. Научно-исследовательская деятельность</th>
+                <th className="sorter" onClick={() => sortData('innovativePoints')}>III. Инновационно-образовательная деятельность</th>
+                <th className="sorter" onClick={() => sortData('socialPoints')}>IV. Воспитательная, общественная деятельность</th>
+                <th className="sorter" onClick={() => sortData('expertPoints')}>Баллы экспертов</th>
+                <th className="sorter" onClick={() => sortData('sum')}>Итого</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredData.map((data, i) => (
+                <tr key={data.id}>
+                  <td>{i + 1}</td>
+                  <td><Link to={`/user/${data.id}`}>{data.name}</Link></td>
+                  <td>{data.institute}</td>
+                  <td>{data.awardPoints}</td>
+                  <td>{data.researchPoints}</td>
+                  <td>{data.innovativePoints}</td>
+                  <td>{data.socialPoints}</td>
+                  <td>{data.expertPoints ?? 0}</td>
+                  <td>{data.sum}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <BackButton />
       </div>
     </div>

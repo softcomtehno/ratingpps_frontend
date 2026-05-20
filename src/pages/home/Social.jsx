@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import AccountConf from '../../components/AccountConf';
 import NavBar from '../../components/NavBar';
 import RegNav from '../../components/RegNav';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const Social = () => {
   const [isOpen, setIsOpen] = useState([]);
@@ -13,7 +13,6 @@ const Social = () => {
   const [inputValues, setInputValues] = useState({});
   const [sent, setSent] = useState("Отправить");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const containerRefs = useRef([]);
 
   const toggleDropdown = (index) => {
@@ -56,14 +55,9 @@ const Social = () => {
         });
       });
 
-      const response = await axios.post(
-        "https://api.pps.makalabox.com/api/user/social/add",
-        { socials: socialsData },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+      const response = await api.post(
+        "/api/user/social/add",
+        { socials: socialsData }
       );
       console.log("Data sent successfully:", response.data);
       setSent("Отправлено");
@@ -75,11 +69,7 @@ const Social = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get("https://api.pps.makalabox.com/api/user/social", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.get("/api/user/social");
       const data = response.data[0];
       const newOptions = data.map(item => ({
         ...item,
