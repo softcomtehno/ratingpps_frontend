@@ -35,7 +35,7 @@ function Lppsa() {
         <NavBar />
       </div>
       <div className="admin-panel__main">
-        <label htmlFor="" className="search__label-admin">
+        <label className="search__label-admin">
           <input
             type="text"
             className="search__input Montherat"

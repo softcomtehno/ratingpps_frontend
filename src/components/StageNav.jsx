@@ -10,6 +10,7 @@ const StageNav = () => {
 
     useEffect(() => {
         let mounted = true;
+
         const fetchStages = async () => {
             try {
                 const res = await api.get("/api/award/all");
@@ -18,6 +19,7 @@ const StageNav = () => {
                 // stages не загрузились
             }
         };
+
         fetchStages();
         return () => { mounted = false; };
     }, []);

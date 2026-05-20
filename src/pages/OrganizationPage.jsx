@@ -104,7 +104,7 @@ function OrganizationPage() {
                   <div className="orgCard">
                     <div className="orgCard__title">Рейтинг преподавателей</div>
                     <div className="orgCard__desc">
-                      Список преподавателей и их баллы (заглушка).
+                      Список преподавателей организации и их баллы.
                     </div>
                   </div>
                 </Link>
@@ -116,19 +116,19 @@ function OrganizationPage() {
                   <div className="orgCard">
                     <div className="orgCard__title">Рейтинг институтов</div>
                     <div className="orgCard__desc">
-                      Рейтинг институтов внутри организации (заглушка).
+                      Рейтинг институтов внутри организации по баллам.
                     </div>
                   </div>
                 </Link>
 
                 <Link
-                  to={`/organization/${org.id}/questions`}
+                  to={`/organization/${org.id}/awards-rating`}
                   className="orgCardLink"
                 >
                   <div className="orgCard">
-                    <div className="orgCard__title">Рейтинг по вопросам</div>
+                    <div className="orgCard__title">Рейтинг по наградам</div>
                     <div className="orgCard__desc">
-                      Аналитика и рейтинг по вопросам (заглушка).
+                      Рейтинг преподавателей организации по выбранной награде.
                     </div>
                   </div>
                 </Link>

@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import api from '../services/api';
+import { clearToken, getToken, setToken as persistToken } from '../services/auth';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken]   = useState(localStorage.getItem('token'));
+  const [token, setToken]   = useState(getToken());
   const [user, setUser]     = useState(null); // для обычных user
   const [teacher, setTeacher]=useState(null); // для teacher
 
@@ -18,12 +19,12 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = (jwt, prof) => {
-    localStorage.setItem('token', jwt);
+    persistToken(jwt);
     setToken(jwt);
     setTeacher(prof);
   };
   const logout = () => {
-    localStorage.removeItem('token');
+    clearToken();
     setToken(null);
     setTeacher(null);
   };

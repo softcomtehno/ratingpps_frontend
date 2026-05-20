@@ -4,6 +4,7 @@ import NavBar from '../../components/NavBar';
 import RegNav from '../../components/RegNav';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import useAuthToken from '../../hooks/useAuthToken';
 
 const Research = () => {
   const [isOpen, setIsOpen] = useState([]);
@@ -13,7 +14,7 @@ const Research = () => {
   const [inputValues, setInputValues] = useState({});
   const [sent, setSent] = useState("Отправить");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = useAuthToken();
   const containerRefs = useRef([]);
 
   const toggleDropdown = (index) => {

@@ -1,46 +1,23 @@
+/* eslint-disable react/prop-types */
 import { Navigate, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import useAuthToken from "../hooks/useAuthToken";
+import useUserRole from "../hooks/useUserRole";
 
-export default function PrivateRoute() {
-  const token = localStorage.getItem("token");
-  const [checking, setChecking] = useState(true);
-  const [ok, setOk] = useState(false);
+export default function PrivateRoute({ allowedRoles = [], children }) {
+  const token = useAuthToken();
+  const { role, loading } = useUserRole(token);
 
-  useEffect(() => {
-    let mounted = true;
+  if (!token) {
+    return <Navigate to="/Authorization" replace />;
+  }
 
-    async function check() {
-      if (!token) {
-        if (mounted) {
-          setOk(false);
-          setChecking(false);
-        }
-        return;
-      }
-
-      try {
-        // простой проверочный запрос (любой защищенный endpoint)
-        await api.get("/api/get/role", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (mounted) setOk(true);
-      } catch (e) {
-        // токен битый/просрочен/невалидный
-        localStorage.removeItem("token");
-        if (mounted) setOk(false);
-      } finally {
-        if (mounted) setChecking(false);
-      }
-    }
-
-    check();
-    return () => { mounted = false; };
-  }, [token]);
-
-  if (checking) {
+  if (loading) {
     return <div style={{ padding: 20, textAlign: "center" }}>Проверка входа...</div>;
   }
 
-  return ok ? <Outlet /> : <Navigate to="/Authorization" replace />;
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return <Navigate to="/Authorization" replace />;
+  }
+
+  return children || <Outlet />;
 }

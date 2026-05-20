@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import api from '../services/api';
 import { Link } from "react-router-dom";
-import api from "../services/api";
+import useAuthToken from "../hooks/useAuthToken";
 
 const NavBar = () => {
   const [role, setRole] = useState("visitor");
-  const [organizations, setOrganizations] = useState([]);
-
-  const token = localStorage.getItem("token");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const token = useAuthToken();
 
   useEffect(() => {
     const load = async () => {
@@ -19,24 +19,10 @@ const NavBar = () => {
       } catch {
         setRole("visitor");
       }
-
-      // 2) Организации
-      try {
-        const res = await api.get("/api/organizations");
-        const items = Array.isArray(res.data)
-          ? res.data
-          : (res.data?.["hydra:member"] ?? res.data?.member ?? []);
-        setOrganizations(items);
-      } catch (e) {
-        console.error("Ошибка загрузки организаций:", e);
-        setOrganizations([]);
-      }
     };
 
     load();
   }, [token]);
-
-  const orgPath = (org) => `/organization/${org.id}`; // ✅ стабильный роут
 
   // Меню для ролей (чтобы не дублировать 4 раза одно и то же)
   const menuByRole = {
@@ -49,11 +35,23 @@ const NavBar = () => {
       { to: "/Authorization", label: "Авторизация" },
       { to: "/private_office", label: "Личный кабинет" },
     ],
+    director: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+      { to: "/director", label: "Панель директора" },
+    ],
     admin: [
       { to: "/LPPS", label: "Список ППС" },
       { to: "/Authorization", label: "Авторизация" },
       { to: "/private_office", label: "Личный кабинет" },
       { to: "/admin", label: "Админ Панель" },
+    ],
+    expert: [
+      { to: "/LPPS", label: "Список ППС" },
+      { to: "/Authorization", label: "Авторизация" },
+      { to: "/private_office", label: "Личный кабинет" },
+      { to: "/expert", label: "Панель эксперта" },
     ],
   };
 
@@ -66,26 +64,27 @@ const NavBar = () => {
           <h2>Рейтинг ППС!</h2>
         </Link>
 
-        <ul className="nav__list">
+        <ul className="nav__list" style={{ justifyContent: 'flex-end' }}>
           <li>
             <Link to="/">Главная</Link>
           </li>
 
-          {/* ✅ Организации из API */}
-          {organizations.map((org) => (
-            <li key={org.id}>
-              <Link to={orgPath(org)}>{org.name}</Link>
-            </li>
-          ))}
-
           {/* Бургер */}
           <li>
             <div className="hamburger-menu">
-              <input id="menu__toggle" type="checkbox" />
-              <ul className="menu__box">
+              <button
+                type="button"
+                className="menu__toggle"
+                aria-label="Открыть меню"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                ☰
+              </button>
+              <ul className={`menu__box ${menuOpen ? "menu__box--open" : ""}`}>
                 {burgerItems.map((item) => (
                   <li key={item.to}>
-                    <Link to={item.to} className="menu__item">
+                    <Link to={item.to} className="menu__item" onClick={() => setMenuOpen(false)}>
                       {item.label}
                     </Link>
                   </li>

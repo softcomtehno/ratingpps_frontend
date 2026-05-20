@@ -41,7 +41,7 @@
   width: 100%;
   height: 160px;              /* ФИКСИРОВАННАЯ ВЫСОТА */
   object-fit: contain;        /* ❗ НЕ cover */
-  background: #f0f0f0;
+  background: #ffffff;
   border-radius: 12px;
   padding: 12px;              /* чтобы логотип не прилипал */
 }

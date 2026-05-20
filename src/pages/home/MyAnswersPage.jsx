@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import api from '../../services/api';
 import NavBar from "../../components/NavBar";
 import StageNav from "../../components/StageNav";
 import AccountConf from "../../components/AccountConf";
-import api from "../../services/api";
+import YearSelector from "../../components/YearSelector";
+import useAuthToken from "../../hooks/useAuthToken";
+import { useYears } from "../../hooks/useYears";
 import "../../css/MyAnswers.css";
 
 // ─── Placeholder endpoints ─────────────────────────────────────────────────
@@ -16,18 +19,25 @@ export default function MyAnswersPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const token = localStorage.getItem("token");
+    const token = useAuthToken();
     const headers = { Authorization: `Bearer ${token}` };
+    const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
 
     useEffect(() => {
+        if (yearsLoading) return;
         let mounted = true;
+        setLoading(true);
+        setError(null);
+        const params = selectedYear ? { yearId: selectedYear.id } : {};
         api
-            .get("/api/teacher/answers", { headers })
+            .get("/api/teacher/answers", { headers, params })
             .then((res) => { if (mounted) setStages(Array.isArray(res.data) ? res.data : []); })
             .catch((e) => { if (mounted) setError(e.response?.data?.message || "Ошибка загрузки наград"); })
             .finally(() => { if (mounted) setLoading(false); });
         return () => { mounted = false; };
-    }, []);
+    }, [selectedYear, yearsLoading]);
+
+    const isCurrentYearSelected = Boolean(selectedYear?.isCurrent);
 
     const updateAnswer = (stageId, answerId, patch) =>
         setStages((prev) =>
@@ -73,6 +83,17 @@ export default function MyAnswersPage() {
 
                     <div className="po-page">
                         <h2 className="po-page-title">Мои награды</h2>
+                        <YearSelector
+                            years={years}
+                            selectedYear={selectedYear}
+                            onChange={setSelectedYear}
+                            loading={yearsLoading}
+                        />
+                        {!isCurrentYearSelected && (
+                            <div className="po-alert" style={{ marginBottom: "12px" }}>
+                                Просмотр архивного года: редактирование и удаление отключены.
+                            </div>
+                        )}
 
                         {!loading && !error && totalCount > 0 && (
                             <div className="ma-summary">
@@ -124,6 +145,7 @@ export default function MyAnswersPage() {
                                                 award={award}
                                                 index={idx + 1}
                                                 frozen={!award.isActive}
+                                                readOnly={!isCurrentYearSelected}
                                                 onSaveLink={(l) => handleSaveLink(stage.stageId, award.answerId, l)}
                                                 onDelete={() => handleDelete(stage.stageId, award.answerId)}
                                                 onUnfreeze={() => handleUnfreeze(stage.stageId, award.answerId)}
@@ -141,7 +163,7 @@ export default function MyAnswersPage() {
 }
 
 // ── AwardRow — двухуровневая структура ─────────────────────────────────────
-function AwardRow({ award, index, frozen, onSaveLink, onDelete, onUnfreeze }) {
+function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete, onUnfreeze }) {
     const [editing, setEditing] = useState(false);
     const [linkValue, setLinkValue] = useState(award.answerLink || "");
     const [busy, setBusy] = useState(false);
@@ -185,7 +207,7 @@ function AwardRow({ award, index, frozen, onSaveLink, onDelete, onUnfreeze }) {
                     <button
                         className={`ma-btn ${confirmDelete ? "ma-btn--confirm" : "ma-btn--delete"}`}
                         onClick={handleDelete}
-                        disabled={busy}
+                        disabled={busy || readOnly}
                         title={confirmDelete ? "Нажмите ещё раз" : "Удалить"}
                         onBlur={() => setConfirmDelete(false)}
                     >
@@ -221,11 +243,11 @@ function AwardRow({ award, index, frozen, onSaveLink, onDelete, onUnfreeze }) {
                             ? <a href={award.answerLink} target="_blank" rel="noopener noreferrer" className="ma-row__link">↗ Документ</a>
                             : <span className="ma-row__no-link">нет ссылки</span>
                         }
-                        <button className="ma-btn ma-btn--edit" onClick={() => { setEditing(true); setRowError(null); }}>
+                        <button className="ma-btn ma-btn--edit" onClick={() => { setEditing(true); setRowError(null); }} disabled={readOnly}>
                             ✎ Изменить ссылку
                         </button>
                         {frozen && (
-                            <button className="ma-btn ma-btn--unfreeze" onClick={handleUnfreeze} disabled={busy}>
+                            <button className="ma-btn ma-btn--unfreeze" onClick={handleUnfreeze} disabled={busy || readOnly}>
                                 {busy ? "…" : "☀️ Разморозить"}
                             </button>
                         )}

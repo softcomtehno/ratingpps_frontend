@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import api from '../../../services/api';
 import { Link } from 'react-router-dom';
 import NavBar from '../../../components/NavBar';
-import api from '../../../services/api';
+import useAuthToken from '../../../hooks/useAuthToken';
 
 const Rating = () => {
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([])
   const [selectedAward, setSelectedAward] = useState(1);

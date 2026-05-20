@@ -13,7 +13,6 @@ const Education = () => {
   const [inputValues, setInputValues] = useState({});
   const [sent, setSent] = useState("Отправить");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const containerRefs = useRef([]);
 
   const toggleDropdown = (index) => {

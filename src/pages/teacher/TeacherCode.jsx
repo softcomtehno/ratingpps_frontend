@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import { setToken } from '../../services/auth';
 
 export default function TeacherCode() {
   const { state } = useLocation(); // { email }
@@ -15,7 +16,7 @@ export default function TeacherCode() {
     setLoad(true); setErr('');
     try {
       const { data } = await api.post('/api/auth/verify', { email: state.email, code, password: pass });
-      localStorage.setItem('token', data.token);
+      setToken(data.token);
       nav('/teacher/step2');
     } catch (e) {
       setErr(e.response?.data?.message || 'Неверный код/пароль');

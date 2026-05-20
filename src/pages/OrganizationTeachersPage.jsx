@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
+import YearSelector from "../components/YearSelector";
+import { useYears } from "../hooks/useYears";
 import api from "../services/api";
 import "../css/OrganizationTeachersPage.css";
 
 const API_ORIGIN = import.meta.env.VITE_API_ORIGIN || "https://api.pps.makalabox.com";
+const EXPERT_SORT_KEY = -1;
 
 const OrganizationTeachersPage = () => {
   const params = useParams();
@@ -15,13 +18,15 @@ const OrganizationTeachersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+  const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
+
   const [sortStageId, setSortStageId] = useState(null);
   const [sortDirection, setSortDirection] = useState("desc");
 
   useEffect(() => {
-    if (!id) {
-      setError("Не найден id организации в URL");
-      setLoading(false);
+    if (!id || yearsLoading) {
+      if (!id) { setError("Не найден id организации в URL"); setLoading(false); }
       return;
     }
 
@@ -29,10 +34,11 @@ const OrganizationTeachersPage = () => {
     setLoading(true);
     setError(null);
 
-    // Параллельно грузим данные организации и рейтинг
+    const yearParam = selectedYearId ? `?yearId=${selectedYearId}` : '';
+
     Promise.all([
       api.get(`/api/organizations/${id}`).then(r => r.data).catch(() => null),
-      fetch(`https://api.pps.makalabox.com/api/rating/organization/${id}/pps`, {
+      fetch(`https://api.pps.makalabox.com/api/rating/organization/${id}/pps${yearParam}`, {
         signal: controller.signal,
       })
         .then(res => {
@@ -53,7 +59,7 @@ const OrganizationTeachersPage = () => {
       });
 
     return () => controller.abort();
-  }, [id]);
+  }, [id, selectedYearId, yearsLoading]);
 
   const stageData = useMemo(() => {
     const first = ratings?.[0];
@@ -75,6 +81,15 @@ const OrganizationTeachersPage = () => {
 
   const teachers = useMemo(() => {
     const list = Array.isArray(ratings) ? [...ratings] : [];
+
+    if (sortStageId === EXPERT_SORT_KEY) {
+      list.sort((a, b) => {
+        const aPoints = Number(a?.expertPoints ?? 0);
+        const bPoints = Number(b?.expertPoints ?? 0);
+        return sortDirection === "asc" ? aPoints - bPoints : bPoints - aPoints;
+      });
+      return list;
+    }
 
     if (sortStageId !== null) {
       list.sort((a, b) => {
@@ -112,6 +127,15 @@ const OrganizationTeachersPage = () => {
     }
   };
 
+  const handleSortExpert = () => {
+    if (sortStageId === EXPERT_SORT_KEY) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortStageId(EXPERT_SORT_KEY);
+      setSortDirection("desc");
+    }
+  };
+
   const rankMedal = (idx) => {
     if (idx === 0) return <span className="otp-medal otp-medal--gold">🥇</span>;
     if (idx === 1) return <span className="otp-medal otp-medal--silver">🥈</span>;
@@ -144,6 +168,8 @@ const OrganizationTeachersPage = () => {
             <h1 className="otp-hero__title">Рейтинг преподавателей</h1>
           </div>
         </div>
+
+        <YearSelector years={years} selectedYear={selectedYear} onChange={setSelectedYear} loading={yearsLoading} />
 
         {loading && (
           <div className="otp-state">
@@ -208,6 +234,18 @@ const OrganizationTeachersPage = () => {
                     ))}
 
                     <th
+                      className={`otp-th otp-th--total${sortStageId === EXPERT_SORT_KEY ? " otp-th--active" : ""}`}
+                      onClick={handleSortExpert}
+                      title="Сортировать по экспертным баллам"
+                    >
+                      Экспертные баллы
+                      <SortArrow
+                        active={sortStageId === EXPERT_SORT_KEY}
+                        direction={sortDirection}
+                      />
+                    </th>
+
+                    <th
                       className={`otp-th otp-th--total${sortStageId === null ? " otp-th--active" : ""}`}
                       onClick={handleSortTotal}
                       title="Сортировать по общему рейтингу"
@@ -229,7 +267,13 @@ const OrganizationTeachersPage = () => {
                     >
                       <td className="otp-td otp-td--rank">{rankMedal(idx)}</td>
                       <td className="otp-td otp-td--name" title={teacher?.name ?? ""}>
-                        {teacher?.name ?? <span className="otp-noname">Без имени</span>}
+                        {teacher?.id ? (
+                          <Link to={`/user/${teacher.id}${selectedYearId ? `?yearId=${selectedYearId}` : ""}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
+                            {teacher?.name ?? "Без имени"}
+                          </Link>
+                        ) : (
+                          teacher?.name ?? <span className="otp-noname">Без имени</span>
+                        )}
                       </td>
 
                       {stageData.map((stage) => {
@@ -245,6 +289,14 @@ const OrganizationTeachersPage = () => {
                           </td>
                         );
                       })}
+
+                      <td className="otp-td otp-td--points">
+                        {teacher?.expertPoints ? (
+                          <span className="otp-points">{teacher.expertPoints}</span>
+                        ) : (
+                          <span className="otp-points otp-points--zero">—</span>
+                        )}
+                      </td>
 
                       <td className="otp-td otp-td--total">
                         <span className="otp-total">{teacher?.total ?? 0}</span>

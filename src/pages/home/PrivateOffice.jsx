@@ -4,12 +4,13 @@ import NavBar from "../../components/NavBar";
 import StageNav from "../../components/StageNav";
 import AccountConf from "../../components/AccountConf";
 import api from "../../services/api";
+import useAuthToken from "../../hooks/useAuthToken";
 import "../../css/PrivateOfficeNew.css";
 
 function PrivateOffice() {
   const navigate = useNavigate();
 
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const token = useAuthToken();
 
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -39,12 +40,6 @@ function PrivateOffice() {
   const [positions, setPositions] = useState([]);
   const [organizations, setOrganizations] = useState([]);
   const [institutesMap, setInstitutesMap] = useState({});
-
-  useEffect(() => {
-    const handleStorage = () => setToken(localStorage.getItem("token"));
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
 
   useEffect(() => {
     let mounted = true;

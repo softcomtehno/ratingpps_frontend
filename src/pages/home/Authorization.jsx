@@ -1,179 +1,69 @@
-// import { useState, useCallback, useEffect } from "react";
-// import axios from "axios";
-// import NavBar from "../../components/NavBar";
-// import { useNavigate } from "react-router-dom";
-
-// function Authorization() {
-//   const [name, setName] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-//   const [error, setError] = useState(false);
-//   const [showPassword, setShowPassword] = useState(false);
-//   const navigate = useNavigate()
-
-//   const handleLogin = useCallback((e) => {
-//     e.preventDefault();
-//     axios.post('https://api.pps.makalabox.com/api/login', {
-//       "username": name,
-//       "password": password,
-//     })
-//       .then(function (response) {
-//         if (response.status >= 200 && response.status <= 204) {
-//           localStorage.setItem('token', response.data.token);
-//           navigate("/private_office")
-//           setIsLoggedIn(true);
-//           location.reload()
-//         }
-//       })
-//       .catch(function (error) {
-//         setError(true);
-//         console.log(error);
-//       });
-//   }, [name, navigate, password]);
-
-//   const handleLogout = useCallback(() => {
-//     localStorage.removeItem('token');
-//     setIsLoggedIn(false);
-//     location.reload()
-//   }, []);
-
-//   useEffect(() => {
-//     setIsLoggedIn(!!localStorage.getItem('token'));
-//   }, []);
-
-//   return (
-//     <div className="сontents">
-//       <div className="header">
-//         <NavBar />
-//       </div>
-//       <div className="main">
-//         <div className="title__contain"><h2 className="Edu__text-L center">Авторизация</h2></div>
-//         <div className="auth__contain">
-//           <label htmlFor="" className="auth__label">
-//             <form onSubmit={handleLogin}>
-//               <p className="input__text Montherat">Логин</p>
-//               <input type="text" className={'auth__input Montherat'} value={name} onChange={e => setName(e.target.value)} placeholder="Логин" />
-//               <p className="input__text Montherat">Пароль</p>
-//               <div className="password-input-container">
-//                 <input
-//                   type={showPassword ? "text" : "password"}
-//                   autoComplete=""
-//                   className="auth__input Montherat"
-//                   value={password}
-//                   onChange={e => setPassword(e.target.value)}
-//                   placeholder="Пароль"
-//                 />
-//                 <div className="show-password-checkbox">
-//                   <input
-//                     type="checkbox"
-//                     checked={showPassword}
-//                     onChange={() => setShowPassword(!showPassword)}
-//                   />
-//                   <label className="Edu__text-S">Посмотреть пароль</label>
-//                 </div>
-//               </div>
-//               {error && <p className="input__text Montherat">Неправильный логин или пароль</p>}
-//             </form>
-//             {isLoggedIn ? (
-//               <>
-//                 <div className="auth__btn-center">
-//                   <button onClick={handleLogout} className="bnt__log Edu__text-S">Выйти</button>
-//                 </div>
-//               </>
-//             ) : (
-//               <>
-//                 <div className="auth__btn">
-//                   <button onClick={handleLogin} className="bnt__log Edu__text-S">Войти</button>
-//                 </div>
-//                 <div className="auth__btn">
-//                   {/* <Link to='/Registration' className="bnt__log Edu__text-S">Регистрация</Link> */}
-//                 </div>
-//               </>
-//             )}
-//           </label>
-//           <p className="input__text-p Montherat">Связь по 050ss2628953</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Authorization;
-
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
+import { clearToken, getToken, setToken } from "../../services/auth";
+import "../../css/Authorization.css";
 
 function Authorization() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  /* --------- 1. Принимаем JWT после Google-редиректа --------- */
   useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      localStorage.setItem('token', token);
-      setIsLoggedIn(true);
-      // проверяем, заполнен ли профиль
-      axios.get('/api/me', { headers: { Authorization: `Bearer ${token}` } })
-        .then(res => {
-          const t = res.data;
-           
-          if (!t.firstName || !t.position) navigate('/teacher/step2');  
-          else navigate('/private_office');
-        })
-        .catch(() => navigate('/')); // если 401 – на главную
-    }
+    const token = searchParams.get("token");
+    if (!token) return;
+
+    setToken(token);
+    setIsLoggedIn(true);
+
+    axios
+      .get("/api/me", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        const t = res.data;
+        if (!t.firstName || !t.position) navigate("/teacher/step2");
+        else navigate("/private_office");
+      })
+      .catch(() => navigate("/"));
   }, [searchParams, navigate]);
 
-  /* --------- 2. Выход --------- */
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    clearToken();
     setIsLoggedIn(false);
-    navigate('/');
+    navigate("/");
   };
 
-  /* --------- 4. Кнопка «Войти через Google» --------- */
   const googleLogin = () => {
-    const base = import.meta.env.VITE_API_URL || 'https://api.pps.makalabox.com';
-    window.location.href = `${base}/api/auth/google`; // редирект на OAuth
+    const base = import.meta.env.VITE_API_URL || "https://api.pps.makalabox.com";
+    window.location.href = `${base}/api/auth/google`;
   };
 
   return (
-    <div className="сontents">
-      <div className="header"><NavBar /></div>
-      <div className="main">
-        <h2 className="Edu__text-L center">Авторизация</h2>
+    <div className="auth-page">
+      <div className="header">
+        <NavBar />
+      </div>
 
-        <div className="auth__contain">
+      <main className="auth-main">
+        <section className="auth-card">
+          <h1 className="auth-title">Авторизация</h1>
           {!isLoggedIn ? (
             <>
-              <p className="input__text Montherat center">
-                Вход в систему осуществляется только через Google‑аккаунт.
-              </p>
-              <div className="auth__btn" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
-                <button onClick={googleLogin} className="bnt__log Edu__text-S">
-                  Войти через Google
-                </button>
-              </div>
-              <p className="input__text-p Montherat">Связь по 0502628953</p>
+              <p className="auth-text">Вход в систему осуществляется через Google-аккаунт.</p>
+              <button onClick={googleLogin} className="auth-google-btn" type="button">
+                Войти через Google
+              </button>
             </>
           ) : (
             <>
-              <p className="input__text Montherat center">
-                Вы уже вошли в систему через Google.
-              </p>
-              <div className="auth__btn-center" style={{ marginTop: '1.5rem' }}>
-                <button onClick={handleLogout} className="bnt__log Edu__text-S">
-                  Выйти
-                </button>
-              </div>
+              <p className="auth-text">Вы уже авторизованы в системе.</p>
+              <button onClick={handleLogout} className="auth-logout-btn" type="button">
+                Выйти
+              </button>
             </>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

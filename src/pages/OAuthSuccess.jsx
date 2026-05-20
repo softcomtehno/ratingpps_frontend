@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
+import { setToken } from "../services/auth";
 
 export default function OAuthSuccess() {
   const navigate = useNavigate();
@@ -10,28 +11,27 @@ export default function OAuthSuccess() {
   useEffect(() => {
     const token = searchParams.get("token");
     if (!token) {
-      setMsg("❌ Нет токена в адресе");
-      // setTimeout(() => navigate("/"), 3000);
+      //setMsg("❌ Нет токена в адресе");
+      setTimeout(() => navigate("/"), 300);
       return;
     }
 
-    localStorage.setItem("token", token);
-    setMsg("✅ Токен получен, загружаем профиль...");
+    setToken(token);
+    //setMsg("✅ Токен получен, загружаем профиль...");
 
     api.get("/api/me")
       .then(res => {
-        
-        console.log("Профиль:", res.data);   
+
         const t = res.data;
-        alert(JSON.stringify(t, null, 2));
-        setMsg(`Профиль: ${t.firstName || "?"} ${t.lastName || "?"} | position: ${t.position?.name || "нет"}`);
+        //alert(JSON.stringify(t, null, 2));
+        //setMsg(`Профиль: ${t.firstName || "?"} ${t.lastName || "?"} | position: ${t.position?.name || "нет"}`);
         if (!t.firstName || !t.position) {
-          setMsg("→ Переход к заполнению профиля...");
-          setTimeout(() => navigate("/teacher/step2"), 1500);
-        } 
+          //setMsg("→ Переход к заполнению профиля...");
+          setTimeout(() => navigate("/teacher/step2"), 150);
+        }
         else {
-          setMsg("→ Переход в кабинет...");
-          setTimeout(() => navigate("/private_office"), 1500);
+          //setMsg("→ Переход в кабинет...");
+          setTimeout(() => navigate("/private_office"), 150);
         }
       })
       .catch(err => {
@@ -47,4 +47,3 @@ export default function OAuthSuccess() {
     </div>
   );
 }
-

@@ -73,6 +73,7 @@ function Department() {
               <th className="sorter" onClick={() => sortData('researchPoints')}>II. Научно-исследовательская деятельность</th>
               <th className="sorter" onClick={() => sortData('innovativePoints')}>III. Инновационно-образовательная деятельность</th>
               <th className="sorter" onClick={() => sortData('socialPoints')}>IV. Воспитательная, общественная деятельность</th>
+              <th className="sorter" onClick={() => sortData('expertPoints')}>Баллы экспертов</th>
               <th className="sorter" onClick={() => sortData('sum')}>Итого</th>
             </tr>
           </thead>
@@ -86,6 +87,7 @@ function Department() {
                 <td>{user.researchPoints}</td>
                 <td>{user.innovativePoints}</td>
                 <td>{user.socialPoints}</td>
+                <td>{user.expertPoints ?? 0}</td>
                 <td>{user.sum}</td>
               </tr>
             ))}

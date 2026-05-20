@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import api from '../../services/api';
 import { Link, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
-import api from "../../services/api";
+import useAuthToken from "../../hooks/useAuthToken";
 
 function AwardsInfo() {
   const { id } = useParams();
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [userData, setUserData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
 

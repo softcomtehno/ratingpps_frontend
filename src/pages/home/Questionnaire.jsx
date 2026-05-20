@@ -1,13 +1,14 @@
 import { useCallback, useState, useEffect } from "react";
+import api from '../../services/api';
 import NavBar from "../../components/NavBar";
 import RegNav from "../../components/RegNav";
 import AccountConf from "../../components/AccountConf";
 import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import useAuthToken from "../../hooks/useAuthToken";
 
 function Questionnaire() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = useAuthToken();
   const [userData, setUserData] = useState(null);
   const [institutes, setInstitutes] = useState([]);
   const [positions, setPositions] = useState([]);
