@@ -28,10 +28,13 @@ export default function OrganizationAwardTeachersPage() {
       try {
         const [orgRes, questionsRes] = await Promise.all([
           api.get(`/api/organizations/${orgId}`),
-          api.get("/api/rating/question/get/awards"),
+          // Asks for this organization's questions rather than a stage the
+          // backend picked: the page is about the organization in the URL, and
+          // the stage it used to be pinned to was the wrong one anyway.
+          api.get(`/api/rating/organization/${orgId}/questions`),
         ]);
         if (cancelled) return;
-        const awardsData = questionsRes.data?.awards ?? [];
+        const awardsData = (questionsRes.data?.questions ?? []).map(q => q.question);
         setOrg(orgRes.data);
         setAwards(awardsData);
         if (awardsData.length > 0) {
