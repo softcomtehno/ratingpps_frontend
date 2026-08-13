@@ -38,7 +38,7 @@ const OrganizationTeachersPage = () => {
 
     Promise.all([
       api.get(`/api/organizations/${id}`).then(r => r.data).catch(() => null),
-      fetch(`https://api.pps.makalabox.com/api/rating/organization/${id}/pps${yearParam}`, {
+      fetch(`${API_ORIGIN}/api/rating/organization/${id}/pps${yearParam}`, {
         signal: controller.signal,
       })
         .then(res => {
