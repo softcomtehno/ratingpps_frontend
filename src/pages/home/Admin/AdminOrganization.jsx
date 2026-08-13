@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { API_BASE_URL } from "../../../services/api";
 import NavBar from "../../../components/NavBar";
+import useAuthToken from "../../../hooks/useAuthToken";
+import useUserRole from "../../../hooks/useUserRole";
 import "../../../css/Rating.css";
 
 export default function AdminOrganization() {
@@ -11,15 +13,29 @@ export default function AdminOrganization() {
   const [formData, setFormData] = useState({ name: "", photoFile: null });
   const navigate = useNavigate();
 
-  const fetchOrganizations = () => {
+  const token = useAuthToken();
+  const { organization, isSuperAdmin } = useUserRole(token);
+
+  // /api/organizations is not filtered by organization — the organization is
+  // the tenant, not something owned by one — so an admin bound to a single
+  // organization is narrowed down here. Creating and deleting are super admin
+  // only, and the backend refuses them either way.
+  const fetchOrganizations = useCallback(() => {
     api.get("/api/organizations")
-      .then(res => setOrganizations(res.data))
+      .then(res => {
+        const all = res.data ?? [];
+        setOrganizations(
+          isSuperAdmin || !organization
+            ? all
+            : all.filter(org => org.id === organization.id)
+        );
+      })
       .catch(err => console.error(err));
-  };
+  }, [organization, isSuperAdmin]);
 
   useEffect(() => {
     fetchOrganizations();
-  }, []);
+  }, [fetchOrganizations]);
 
   const goToInstitutes = (orgId) => {
     navigate(`/admin/organization/${orgId}/institutes`);
@@ -95,9 +111,11 @@ export default function AdminOrganization() {
       <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '20px', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
           <h2 className="Edu__text-L" style={{ margin: 0 }}>Управление организациями</h2>
-          <button className="bnt__log" onClick={() => handleOpenModal()} style={{ background: '#22c55e', whiteSpace: 'nowrap' }}>
-            + Добавить
-          </button>
+          {isSuperAdmin && (
+            <button className="bnt__log" onClick={() => handleOpenModal()} style={{ background: '#22c55e', whiteSpace: 'nowrap' }}>
+              + Добавить
+            </button>
+          )}
         </div>
 
         <div style={{
@@ -142,10 +160,12 @@ export default function AdminOrganization() {
                     onClick={(e) => { e.stopPropagation(); handleOpenModal(org); }}
                     style={{ background: '#3b82f6', border: 'none', borderRadius: '4px', color: '#fff', padding: '5px 10px', cursor: 'pointer' }}
                   >✏️</button>
-                  <button
-                    onClick={(e) => handleDelete(e, org.id)}
-                    style={{ background: '#ef4444', border: 'none', borderRadius: '4px', color: '#fff', padding: '5px 10px', cursor: 'pointer' }}
-                  >🗑️</button>
+                  {isSuperAdmin && (
+                    <button
+                      onClick={(e) => handleDelete(e, org.id)}
+                      style={{ background: '#ef4444', border: 'none', borderRadius: '4px', color: '#fff', padding: '5px 10px', cursor: 'pointer' }}
+                    >🗑️</button>
+                  )}
                 </div>
               </div>
             )
