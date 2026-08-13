@@ -6,7 +6,6 @@ import Home from './pages/Home';
 import LPPS from './pages/home/LPPS';
 import Authorization from './pages/home/Authorization';
 import Registration from './pages/home/Registration';
-import Questionnaire from './pages/home/Questionnaire';
 import Department from './pages/home/Department';
 import UserInfo from './pages/home/UserInfo';
 import TeacherEmail from './pages/teacher/TeacherEmail';
@@ -29,7 +28,6 @@ function App() {
         <Route path="/LPPS" element={<LPPS />} />
         <Route path="/Authorization" element={<Authorization />} />
         <Route path="/Registration" element={<Registration />} />
-        <Route path="/Questionnaire" element={<Questionnaire />} />
         <Route path="/user/:id" element={<UserInfo />} />
         <Route path="/department/:id" element={<Department />} />
         <Route path="/rating/institutes" element={<InstituteRating />} />
