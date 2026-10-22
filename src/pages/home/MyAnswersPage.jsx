@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import api from '../../services/api';
 import NavBar from "../../components/NavBar";
 import StageNav from "../../components/StageNav";
@@ -19,7 +20,6 @@ export default function MyAnswersPage() {
     const [error, setError] = useState(null);
 
     const token = useAuthToken();
-    const headers = { Authorization: `Bearer ${token}` };
     const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
 
     useEffect(() => {
@@ -29,12 +29,12 @@ export default function MyAnswersPage() {
         setError(null);
         const params = selectedYear ? { yearId: selectedYear.id } : {};
         api
-            .get("/api/teacher/answers", { headers, params })
+            .get("/api/teacher/answers", { params })
             .then((res) => { if (mounted) setStages(Array.isArray(res.data) ? res.data : []); })
             .catch((e) => { if (mounted) setError(e.response?.data?.message || "Ошибка загрузки наград"); })
             .finally(() => { if (mounted) setLoading(false); });
         return () => { mounted = false; };
-    }, [selectedYear, yearsLoading]);
+    }, [selectedYear, yearsLoading, token]);
 
     const isCurrentYearSelected = Boolean(selectedYear?.isCurrent);
 
@@ -54,13 +54,13 @@ export default function MyAnswersPage() {
         );
 
     const handleSaveLink = async (stageId, answerId, newLink) => {
-        await api.put(`/api/teacher/answers/${answerId}`, { answerLink: newLink }, { headers });
+        await api.put(`/api/teacher/answers/${answerId}`, { answerLink: newLink });
         // Бэкенд снимает заморозку, когда ссылка исправлена.
         updateAnswer(stageId, answerId, { answerLink: newLink, isActive: true });
     };
 
     const handleDelete = async (stageId, answerId) => {
-        await api.delete(`/api/teacher/answers/${answerId}`, { headers });
+        await api.delete(`/api/teacher/answers/${answerId}`);
         removeAnswer(stageId, answerId);
     };
 
@@ -245,3 +245,15 @@ function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete }) {
         </div>
     );
 }
+
+AwardRow.propTypes = {
+    award: PropTypes.shape({
+        answerName: PropTypes.string,
+        answerLink: PropTypes.string,
+    }).isRequired,
+    index: PropTypes.number.isRequired,
+    frozen: PropTypes.bool,
+    readOnly: PropTypes.bool,
+    onSaveLink: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+};
