@@ -1,15 +1,8 @@
 import { Navigate } from 'react-router-dom';
 import PrivateOffice from '../pages/home/PrivateOffice';
-import Progress from '../pages/home/Progress';
-import Research from '../pages/home/Research';
-import Education from '../pages/home/Education';
-import Social from '../pages/home/Social';
 import AwardsPage from '../pages/home/AwardsPage';
-import Redact from '../pages/home/Redact';
 import MyAnswersPage from '../pages/home/MyAnswersPage';
-import UserInfoA from '../pages/home/Admin/UserInfoA';
 import Admin from '../pages/home/Admin/Admin';
-import Lppsa from '../pages/home/Admin/LPPSA';
 import AdminOrganization from '../pages/home/Admin/AdminOrganization';
 import AdminAwards from '../pages/home/Admin/AdminAwards';
 import AdminDirectors from '../pages/home/Admin/AdminDirectors';
@@ -30,20 +23,13 @@ export const ALL_AUTH_ROLES = ['admin', 'teacher', 'expert', 'director'];
 
 const commonProtectedRoutes = [
   { path: '/private_office', element: <PrivateOffice />, roles: ALL_AUTH_ROLES },
-  { path: '/Progress', element: <Progress />, roles: ALL_AUTH_ROLES },
-  { path: '/Ural', element: <Research />, roles: ALL_AUTH_ROLES },
-  { path: '/Education', element: <Education />, roles: ALL_AUTH_ROLES },
-  { path: '/Social', element: <Social />, roles: ALL_AUTH_ROLES },
   { path: '/awards', element: <AwardsPage />, roles: ALL_AUTH_ROLES },
   { path: '/awards/:stageId', element: <AwardsPage />, roles: ALL_AUTH_ROLES },
-  { path: '/redact/:id', element: <Redact />, roles: ALL_AUTH_ROLES },
   { path: '/my_answers', element: <MyAnswersPage />, roles: ALL_AUTH_ROLES },
 ];
 
 const roleSpecificProtectedRoutes = [
   { path: '/admin', element: <Admin />, roles: ['admin'] },
-  { path: '/user/admin/:id', element: <UserInfoA />, roles: ['admin'] },
-  { path: '/admin_list', element: <Lppsa />, roles: ['admin'] },
   { path: '/admin/organization', element: <AdminOrganization />, roles: ['admin'] },
   { path: '/admin/organization/:id/institutes', element: <AdminOrgInstitutesPage />, roles: ['admin'] },
   { path: '/admin/awards', element: <AdminAwards />, roles: ['admin'] },

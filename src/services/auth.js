@@ -28,8 +28,6 @@ export function isAuthPage(pathname) {
   const path = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '');
   return (
     path === '/Authorization' ||
-    path === '/teacher/email' ||
-    path === '/teacher/code' ||
     path === '/teacher/step2' ||
     path === '/oauth-success'
   );
