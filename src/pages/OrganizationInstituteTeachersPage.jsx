@@ -11,7 +11,7 @@ export default function OrganizationInstituteTeachersPage() {
   const orgId = Number(id);
   const instId = Number(instituteId);
 
-  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears(orgId);
   const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
   const selectedYearName = selectedYear?.name ?? selectedYear?.yearName ?? "Не выбран";
 
@@ -122,7 +122,7 @@ export default function OrganizationInstituteTeachersPage() {
                         <td className="table-data text-center">{idx + 1}</td>
                         <td className="table-data">
                           {teacher.teacherId ? (
-                            <Link to={`/user/${teacher.teacherId}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
+                            <Link to={`/user/${teacher.teacherId}?orgId=${orgId}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
                               {teacher.fullName}
                             </Link>
                           ) : (

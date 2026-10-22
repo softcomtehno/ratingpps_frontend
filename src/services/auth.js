@@ -1,3 +1,5 @@
+import { setOrganizationId } from './organization';
+
 export const TOKEN_KEY = 'token';
 export const AUTH_CHANGED_EVENT = 'auth-changed';
 
@@ -18,6 +20,7 @@ export function setToken(token) {
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+  setOrganizationId(null);
   notifyAuthChanged();
 }
 

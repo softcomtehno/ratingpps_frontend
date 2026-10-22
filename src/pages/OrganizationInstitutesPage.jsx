@@ -19,7 +19,7 @@ export default function OrganizationInstitutesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+    const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears(orgId);
     const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
     const selectedYearName = selectedYear?.name ?? selectedYear?.yearName ?? "Не выбран";
 

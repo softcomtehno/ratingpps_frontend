@@ -9,7 +9,7 @@ export default function OrganizationAwardTeachersPage() {
   const { id } = useParams();
   const orgId = Number(id);
 
-  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears(orgId);
   const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
   const selectedYearName = selectedYear?.name ?? selectedYear?.yearName ?? "Не выбран";
 
@@ -148,7 +148,7 @@ export default function OrganizationAwardTeachersPage() {
                   <tr key={`${row.teacherId}-${idx}`} className="table-row">
                     <td className="table-data text-center">{idx + 1}</td>
                     <td className="table-data">
-                      <Link to={`/user/${row.teacherId}${selectedYearId ? `?yearId=${selectedYearId}` : ""}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
+                      <Link to={`/user/${row.teacherId}?orgId=${orgId}${selectedYearId ? `&yearId=${selectedYearId}` : ""}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
                         {row.name}
                       </Link>
                     </td>

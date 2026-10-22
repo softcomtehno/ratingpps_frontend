@@ -20,7 +20,8 @@ function UserInfo() {
   const { id } = useParams();
   const location = useLocation();
   const token = useAuthToken();
-  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+  const orgId = new URLSearchParams(location.search).get("orgId");
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears(orgId);
   const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
 
   useEffect(() => {
@@ -46,7 +47,7 @@ function UserInfo() {
       try {
         const params = selectedYearId ? { yearId: selectedYearId } : {};
         const [profileRes, roleRes] = await Promise.all([
-          api.get(`/api/user/account/${id}`, { params }),
+          api.get(orgId ? `/api/organizations/${orgId}/user/account/${id}` : `/api/user/account/${id}`, { params }),
           token
             ? api.get("/api/get/role", { headers: { Authorization: `Bearer ${token}` } })
             : Promise.resolve({ data: { role: "visitor" } }),
@@ -70,7 +71,7 @@ function UserInfo() {
     };
     load();
     return () => { mounted = false; };
-  }, [id, token, selectedYearId, yearsLoading]);
+  }, [id, orgId, token, selectedYearId, yearsLoading]);
 
   const handleFreeze = async (itemKey, itemId, stage) => {
     try {

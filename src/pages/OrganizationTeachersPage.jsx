@@ -18,7 +18,7 @@ const OrganizationTeachersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears();
+  const { years, selectedYear, setSelectedYear, loading: yearsLoading } = useYears(id);
   const selectedYearId = selectedYear?.id ?? selectedYear?.yearId ?? null;
 
   const [sortStageId, setSortStageId] = useState(null);
@@ -268,7 +268,7 @@ const OrganizationTeachersPage = () => {
                       <td className="otp-td otp-td--rank">{rankMedal(idx)}</td>
                       <td className="otp-td otp-td--name" title={teacher?.name ?? ""}>
                         {teacher?.id ? (
-                          <Link to={`/user/${teacher.id}${selectedYearId ? `?yearId=${selectedYearId}` : ""}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
+                          <Link to={`/user/${teacher.id}?orgId=${id}${selectedYearId ? `&yearId=${selectedYearId}` : ""}`} style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}>
                             {teacher?.name ?? "Без имени"}
                           </Link>
                         ) : (

@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import api from '../services/api';
 import { Link } from "react-router-dom";
 import useAuthToken from "../hooks/useAuthToken";
+import { getOrganizationId, reconcileOrganization, setOrganizationId } from "../services/organization";
 
 const NavBar = () => {
   const [role, setRole] = useState("visitor");
+  const [organizations, setOrganizations] = useState([]);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [organizationId, setOrganizationIdState] = useState(getOrganizationId());
   const [menuOpen, setMenuOpen] = useState(false);
   const token = useAuthToken();
 
@@ -12,12 +16,25 @@ const NavBar = () => {
     const load = async () => {
       // 1) Роль
       try {
-        const res = await api.get("/api/get/role", {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        // Без заголовка организации: сохранённый выбор мог устареть, и тогда
+        // бэкенд отказал бы в самом запросе, который нужен, чтобы его поправить.
+        const res = await api.get("/api/get/role", { skipOrganization: true });
+        const available = res?.data?.organizations ?? [];
+        const superAdmin = Boolean(res?.data?.isSuperAdmin);
         setRole(res?.data?.role ?? "visitor");
+        setOrganizations(available);
+        setIsSuperAdmin(superAdmin);
+
+        const before = getOrganizationId();
+        const chosen = reconcileOrganization(available, superAdmin);
+        setOrganizationIdState(chosen);
+        // Страница уже могла загрузить данные без выбранной организации.
+        if (chosen !== before && getOrganizationId() === chosen) {
+          window.location.reload();
+        }
       } catch {
         setRole("visitor");
+        setOrganizations([]);
       }
     };
 
@@ -56,6 +73,12 @@ const NavBar = () => {
   };
 
   const burgerItems = menuByRole[role] ?? menuByRole.visitor;
+  const canSwitch = organizations.length > 1;
+
+  const switchOrganization = (value) => {
+    setOrganizationId(value || null);
+    window.location.reload();
+  };
 
   return (
     <nav className="nav">
@@ -68,6 +91,22 @@ const NavBar = () => {
           <li>
             <Link to="/">Главная</Link>
           </li>
+
+          {canSwitch && (
+            <li>
+              <select
+                className="nav__org-select"
+                aria-label="Организация"
+                value={organizationId ?? ""}
+                onChange={(e) => switchOrganization(e.target.value)}
+              >
+                {isSuperAdmin && <option value="">Все организации</option>}
+                {organizations.map((o) => (
+                  <option key={o.id} value={String(o.id)}>{o.name}</option>
+                ))}
+              </select>
+            </li>
+          )}
 
           {/* Бургер */}
           <li>

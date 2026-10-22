@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { clearToken, getToken, isAuthPage } from './auth';
+import { getOrganizationId, ORGANIZATION_HEADER } from './organization';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.pps.makalabox.com';
 
@@ -7,10 +8,14 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// цепляем токен
+// цепляем токен и организацию, за которую действует пользователь
 api.interceptors.request.use(cfg => {
   const t = getToken();
-  if (t) cfg.headers.Authorization = `Bearer ${t}`;
+  if (t) {
+    cfg.headers.Authorization = `Bearer ${t}`;
+    const organizationId = getOrganizationId();
+    if (organizationId && !cfg.skipOrganization) cfg.headers[ORGANIZATION_HEADER] = organizationId;
+  }
   return cfg;
 });
 
