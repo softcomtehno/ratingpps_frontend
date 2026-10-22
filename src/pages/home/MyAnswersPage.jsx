@@ -11,7 +11,6 @@ import "../../css/MyAnswers.css";
 // ─── Placeholder endpoints ─────────────────────────────────────────────────
 // PUT   /api/teacher/answers/{answerId}       body: { answerLink }
 // DELETE /api/teacher/answers/{answerId}
-// PATCH  /api/teacher/answers/{answerId}/unfreeze
 // ──────────────────────────────────────────────────────────────────────────
 
 export default function MyAnswersPage() {
@@ -56,17 +55,13 @@ export default function MyAnswersPage() {
 
     const handleSaveLink = async (stageId, answerId, newLink) => {
         await api.put(`/api/teacher/answers/${answerId}`, { answerLink: newLink }, { headers });
-        updateAnswer(stageId, answerId, { answerLink: newLink });
+        // Бэкенд снимает заморозку, когда ссылка исправлена.
+        updateAnswer(stageId, answerId, { answerLink: newLink, isActive: true });
     };
 
     const handleDelete = async (stageId, answerId) => {
         await api.delete(`/api/teacher/answers/${answerId}`, { headers });
         removeAnswer(stageId, answerId);
-    };
-
-    const handleUnfreeze = async (stageId, answerId) => {
-        await api.patch(`/api/teacher/answers/${answerId}/unfreeze`, {}, { headers });
-        updateAnswer(stageId, answerId, { isActive: true });
     };
 
     const totalCount = stages.reduce((sum, s) => sum + (s.answers?.length ?? 0), 0);
@@ -148,7 +143,6 @@ export default function MyAnswersPage() {
                                                 readOnly={!isCurrentYearSelected}
                                                 onSaveLink={(l) => handleSaveLink(stage.stageId, award.answerId, l)}
                                                 onDelete={() => handleDelete(stage.stageId, award.answerId)}
-                                                onUnfreeze={() => handleUnfreeze(stage.stageId, award.answerId)}
                                             />
                                         ))}
                                     </div>
@@ -163,7 +157,7 @@ export default function MyAnswersPage() {
 }
 
 // ── AwardRow — двухуровневая структура ─────────────────────────────────────
-function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete, onUnfreeze }) {
+function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete }) {
     const [editing, setEditing] = useState(false);
     const [linkValue, setLinkValue] = useState(award.answerLink || "");
     const [busy, setBusy] = useState(false);
@@ -182,12 +176,6 @@ function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete, onUnfr
         setBusy(true);
         try { await onDelete(); }
         catch { setRowError("Не удалось удалить"); setBusy(false); setConfirmDelete(false); }
-    };
-
-    const handleUnfreeze = async () => {
-        setBusy(true); setRowError(null);
-        try { await onUnfreeze(); }
-        catch { setRowError("Не удалось разморозить"); setBusy(false); }
     };
 
     return (
@@ -247,9 +235,7 @@ function AwardRow({ award, index, frozen, readOnly, onSaveLink, onDelete, onUnfr
                             ✎ Изменить ссылку
                         </button>
                         {frozen && (
-                            <button className="ma-btn ma-btn--unfreeze" onClick={handleUnfreeze} disabled={busy || readOnly}>
-                                {busy ? "…" : "☀️ Разморозить"}
-                            </button>
+                            <span className="ma-row__no-link">Заморожена администратором — исправьте ссылку</span>
                         )}
                     </>
                 )}

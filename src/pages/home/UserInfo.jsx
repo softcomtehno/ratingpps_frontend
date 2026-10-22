@@ -9,13 +9,6 @@ import "../../css/PrivateOfficeNew.css";
 import "../../css/MyAnswers.css";
 import "../../css/UserProfile.css";
 
-const SECTIONS = [
-  { key: "userAwards", title: "🏅 Личные достижения", stage: "awards" },
-  { key: "userResearch", title: "🔬 Научно-исследовательская деятельность", stage: "research" },
-  { key: "userInnovative", title: "💡 Инновационно-образовательная деятельность", stage: "innovative" },
-  { key: "userSocial", title: "🤝 Воспитательная и общественная деятельность", stage: "social" },
-];
-
 function UserInfo() {
   const { id } = useParams();
   const location = useLocation();
@@ -34,9 +27,11 @@ function UserInfo() {
 
   const [userData, setUserData] = useState(null);
   const [role, setRole] = useState(null);
+  const [adminOrgId, setAdminOrgId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [items, setItems] = useState({});
+  // Статус заморозки по id награды; меняется на месте после модерации.
+  const [statuses, setStatuses] = useState({});
 
   useEffect(() => {
     if (yearsLoading) return;
@@ -49,20 +44,17 @@ function UserInfo() {
         const [profileRes, roleRes] = await Promise.all([
           api.get(orgId ? `/api/organizations/${orgId}/user/account/${id}` : `/api/user/account/${id}`, { params }),
           token
-            ? api.get("/api/get/role", { headers: { Authorization: `Bearer ${token}` } })
-            : Promise.resolve({ data: { role: "visitor" } }),
+            ? api.get("/api/get/role")
+            : Promise.resolve({ data: { role: "visitor", organization: null } }),
         ]);
         if (!mounted) return;
         setUserData(profileRes.data);
         setRole(roleRes.data.role ?? "visitor");
+        setAdminOrgId(roleRes.data.organization?.id ?? null);
 
-        const map = {};
-        SECTIONS.forEach(({ key, stage }) => {
-          (profileRes.data[key] || []).forEach((item) => {
-            map[`${stage}-${item.id}`] = { ...item, stage };
-          });
-        });
-        setItems(map);
+        setStatuses(Object.fromEntries(
+          (profileRes.data.userAwards || []).map((item) => [item.id, item.status])
+        ));
       } catch {
         if (mounted) setError("Ошибка загрузки профиля");
       } finally {
@@ -73,50 +65,27 @@ function UserInfo() {
     return () => { mounted = false; };
   }, [id, orgId, token, selectedYearId, yearsLoading]);
 
-  const handleFreeze = async (itemKey, itemId, stage) => {
+  const setActive = async (itemId, active) => {
     try {
-      await api({
-        method: "put",
-        url: `/api/user/account/${stage}/freeze`,
-        headers: { Authorization: `Bearer ${token}` },
-        data: { idBag: [{ id: itemId }] },
-      });
-      setItems((prev) => ({ ...prev, [itemKey]: { ...prev[itemKey], status: "freeze" } }));
-    } catch { /* ignore */ }
+      await api.patch(`/api/admin/teacher/answers/${itemId}`, { active });
+      setStatuses((prev) => ({ ...prev, [itemId]: active ? "active" : "freeze" }));
+    } catch { /* статус остаётся прежним */ }
   };
 
-  const handleUnfreeze = async (itemKey, itemId, stage) => {
-    try {
-      await api({
-        method: "put",
-        url: `/api/user/account/${stage}/active`,
-        headers: { Authorization: `Bearer ${token}` },
-        data: { idBag: [{ id: itemId }] },
-      });
-      setItems((prev) => ({ ...prev, [itemKey]: { ...prev[itemKey], status: "active" } }));
-    } catch { /* ignore */ }
-  };
-
-  const isAdmin = role === "admin";
+  // Модерировать можно только награды своей организации.
+  const isAdmin = role === "admin" && (!orgId || String(adminOrgId) === String(orgId));
   const info = userData?.userInfo;
 
-  const totalAwards = SECTIONS.reduce(
-    (sum, { key }) => sum + (userData?.[key]?.length ?? 0), 0
-  );
-  const frozenAwards = Object.values(items).filter((i) => i.status === "freeze").length;
-  const stageTitleMap = {
-    "1": "🔬 Научно-исследовательская деятельность",
-    "2": "🏅 Личные достижения",
-    "3": "💡 Инновационно-образовательная деятельность",
-    "4": "🤝 Воспитательная и общественная деятельность",
-  };
-  const awardsByStage = (userData?.userAwards || []).reduce((acc, item) => {
-    const sid = String(item.stage ?? "2");
-    if (!acc[sid]) acc[sid] = [];
-    acc[sid].push(items[`${sid === "2" ? "awards" : sid === "1" ? "research" : sid === "3" ? "innovative" : "social"}-${item.id}`] || item);
+  const awards = (userData?.userAwards || []).map((item) => ({ ...item, status: statuses[item.id] ?? item.status }));
+  const totalAwards = awards.length;
+  const frozenAwards = awards.filter((i) => i.status === "freeze").length;
+  // Этапы у каждой организации свои, поэтому группируем по тому, что пришло.
+  const stageGroups = awards.reduce((acc, item) => {
+    const key = String(item.stage);
+    if (!acc.has(key)) acc.set(key, { name: item.stageName || "Этап", items: [] });
+    acc.get(key).items.push(item);
     return acc;
-  }, {});
-  const orderedStageIds = ["1", "2", "3", "4"];
+  }, new Map());
 
   return (
     <div className="private-office-contents">
@@ -147,11 +116,11 @@ function UserInfo() {
                   <h1 className="up-name">{info?.name || "—"}</h1>
                   <p className="up-position">{info?.position || ""}</p>
                   <div className="up-meta">
-                    {info?.institut && (
-                      <span className="up-meta-chip">🏛️ {info.institut}</span>
+                    {info?.institute && (
+                      <span className="up-meta-chip">🏛️ {info.institute}</span>
                     )}
-                    {info?.regular && (
-                      <span className="up-meta-chip up-meta-chip--regular">{info.regular}</span>
+                    {info?.regular === "1" && (
+                      <span className="up-meta-chip up-meta-chip--regular">Штатный</span>
                     )}
                     {info?.email && (
                       <span className="up-meta-chip">✉️ {info.email}</span>
@@ -186,20 +155,17 @@ function UserInfo() {
                   <p>Наград пока нет</p>
                 </div>
               ) : (
-                orderedStageIds.map((stageId) => {
-                  const sectionItems = awardsByStage[stageId] || [];
-                  if (sectionItems.length === 0) return null;
+                [...stageGroups].map(([stageId, group]) => {
+                  const sectionItems = group.items;
                   return (
                     <section key={stageId} className="ma-stage">
                       <div className="ma-stage__header">
-                        <h3 className="ma-stage__title">{stageTitleMap[stageId]}</h3>
+                        <h3 className="ma-stage__title">{group.name}</h3>
                         <span className="ma-stage__badge">{sectionItems.length}</span>
                       </div>
                       <div className="ma-list">
                         {sectionItems.map((item, idx) => {
                           const isFrozen = item.status === "freeze";
-                          const stageKey = stageId === "2" ? "awards" : stageId === "1" ? "research" : stageId === "3" ? "innovative" : "social";
-                          const itemKey = `${stageKey}-${item.id}`;
                           return (
                             <div
                               key={item.id}
@@ -225,14 +191,14 @@ function UserInfo() {
                                     ? (
                                       <button
                                         className="ma-btn ma-btn--unfreeze"
-                                        onClick={() => handleUnfreeze(itemKey, item.id, stageKey)}
+                                        onClick={() => setActive(item.id, true)}
                                       >
                                         ☀️ Разморозить
                                       </button>
                                     ) : (
                                       <button
                                         className="ma-btn up-btn--freeze"
-                                        onClick={() => handleFreeze(itemKey, item.id, stageKey)}
+                                        onClick={() => setActive(item.id, false)}
                                       >
                                         ❄️ Заморозить
                                       </button>

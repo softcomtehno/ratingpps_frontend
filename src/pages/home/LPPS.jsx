@@ -5,22 +5,39 @@ import api from "../../services/api";
 import "../../css/LPPS.css";
 
 function Lpps() {
+  const [organizations, setOrganizations] = useState([]);
+  const [orgId, setOrgId] = useState(null);
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    api.get("/api/organizations")
+      .then((res) => {
+        const list = res.data ?? [];
+        setOrganizations(list);
+        setOrgId(list[0]?.id ?? null);
+        if (list.length === 0) setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
+
+  // Организации независимы: учитель виден и оценивается внутри каждой своей.
   const fetchData = useCallback(async () => {
+    if (!orgId) return;
     try {
       setLoading(true);
-      const response = await api.get("/api/rating/users");
-      const data = response.data.users;
-      setUsers(data);
+      const response = await api.get("/api/rating/users", { params: { orgId } });
+      setUsers(response.data.users);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [orgId]);
 
   useEffect(() => {
     fetchData();
@@ -47,6 +64,22 @@ function Lpps() {
         </section>
 
         <section className="lpps-panel">
+          {organizations.length > 1 && (
+            <div className="lpps-orgs" role="tablist">
+              {organizations.map((org) => (
+                <button
+                  key={org.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={org.id === orgId}
+                  className={`lpps-org${org.id === orgId ? " lpps-org--active" : ""}`}
+                  onClick={() => setOrgId(org.id)}
+                >
+                  {org.name}
+                </button>
+              ))}
+            </div>
+          )}
           <label htmlFor="teacher-search" className="lpps-search-label">
             <span className="lpps-search-icon">🔎</span>
             <input
@@ -66,7 +99,7 @@ function Lpps() {
           ) : (
             <div className="lpps-users">
               {filteredUsers.map((user) => (
-                <Link key={user.id} to={`/user/${user.id}`} className="lpps-user-card">
+                <Link key={user.id} to={`/user/${user.id}?orgId=${orgId}`} className="lpps-user-card">
                   <span className="lpps-user-avatar">
                     {(user.name || "?").trim().charAt(0).toUpperCase()}
                   </span>

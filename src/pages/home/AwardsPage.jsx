@@ -98,11 +98,15 @@ function AwardsPage() {
 
     try {
       // Send each entry to the API
-      await Promise.all(
+      const results = await Promise.all(
         entries.map((entry) =>
           api.post("/api/teacher/answer", entry)
         )
       );
+      // Бэкенд отвечает false, если запись не сохранилась.
+      if (results.some((res) => res.data === false)) {
+        throw new Error("save failed");
+      }
       setSubmitStatus("success");
       setSubmitMsg("Данные успешно отправлены!");
     } catch (e) {

@@ -23,6 +23,13 @@ api.interceptors.request.use(cfg => {
 api.interceptors.response.use(
   res => res,
   err => {
+    // Бэкенд кладёт текст ошибки в error (контроллеры) или detail (исключения
+    // Symfony), а страницы читают message.
+    const data = err.response?.data;
+    if (data && typeof data === 'object' && !data.message) {
+      data.message = data.error ?? data.detail;
+    }
+
     if (err.response?.status === 401) {
       clearToken();
 

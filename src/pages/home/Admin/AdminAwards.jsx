@@ -2,22 +2,12 @@ import { useEffect, useState, useCallback } from "react";
 import api from '../../../services/api';
 import { Link } from "react-router-dom";
 import NavBar from "../../../components/NavBar";
-import useAuthToken from "../../../hooks/useAuthToken";
 import "../../../css/AdminAwards.css";
 
-const AWARD_SECTIONS = [
-    { key: "userAwards", label: "Личные достижения" },
-    { key: "userResearch", label: "Научно-исследовательская деятельность" },
-    { key: "userInnovative", label: "Инновационно-образовательная деятельность" },
-    { key: "userSocial", label: "Воспитательная, общественная деятельность" },
-];
-
 function AdminAwards() {
-    const token = useAuthToken();
-
-    // Step 1 — organizations list
-    const [organizations, setOrganizations] = useState([]);
+    // Step 1 — организация, за которую действует админ (выбирается в шапке)
     const [selectedOrg, setSelectedOrg] = useState(null);
+    const [orgResolved, setOrgResolved] = useState(false);
 
     // Step 2 — teachers in org
     const [teachers, setTeachers] = useState([]);
@@ -36,12 +26,13 @@ function AdminAwards() {
     // Search inside teachers list
     const [searchQuery, setSearchQuery] = useState("");
 
-    // ── Load organizations ──────────────────────────────────────────────────
+    // ── Current organization ────────────────────────────────────────────
     useEffect(() => {
         api
-            .get("/api/organizations")
-            .then((res) => setOrganizations(res.data))
-            .catch((err) => console.error(err));
+            .get("/api/get/role")
+            .then((res) => setSelectedOrg(res.data?.organization ?? null))
+            .catch((err) => console.error(err))
+            .finally(() => setOrgResolved(true));
     }, []);
 
     // ── Load teachers when org selected ────────────────────────────────────
@@ -71,55 +62,39 @@ function AdminAwards() {
         setSelectedItems([]);
 
         api
-            .get(`/api/user/account/${selectedTeacher.id}`)
+            .get(`/api/organizations/${selectedOrg.id}/user/account/${selectedTeacher.id}`)
             .then((res) => setUserData(res.data))
             .catch((err) => console.error(err))
             .finally(() => setLoadingAwards(false));
-    }, [selectedTeacher]);
+    }, [selectedOrg, selectedTeacher]);
 
     // ── Selection helpers ───────────────────────────────────────────────────
-    const toggleItem = useCallback((itemId, stage) => {
-        const key = `${itemId}-${stage}`;
+    const toggleItem = useCallback((itemId) => {
         setSelectedItems((prev) =>
-            prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+            prev.includes(itemId) ? prev.filter((k) => k !== itemId) : [...prev, itemId]
         );
     }, []);
 
     // ── Freeze / unfreeze ───────────────────────────────────────────────────
-    const handleAction = async (action) => {
+    const handleAction = async (active) => {
         if (selectedItems.length === 0) return;
         setActionStatus("loading");
         setActionMsg("");
 
         try {
-            // Group selected items by stage
-            const grouped = selectedItems.reduce((acc, item) => {
-                const [itemId, stage] = item.split("-");
-                if (!acc[stage]) acc[stage] = [];
-                acc[stage].push({ id: itemId });
-                return acc;
-            }, {});
-
-            // Send one request per stage
-            for (const stage in grouped) {
-                const url = `/api/admin/${stage}/${action}`;
-                await api.put(url, { idBag: grouped[stage] }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            for (const id of selectedItems) {
+                await api.patch(`/api/admin/teacher/answers/${id}`, { active });
             }
 
             setActionStatus("success");
-            setActionMsg(
-                action === "freeze" ? "Успешно заморожено" : "Успешно разморожено"
-            );
+            setActionMsg(active ? "Успешно разморожено" : "Успешно заморожено");
 
-            // Refresh awards for this teacher
-            const res = await api.get(`/api/user/account/${selectedTeacher.id}`);
+            const res = await api.get(`/api/organizations/${selectedOrg.id}/user/account/${selectedTeacher.id}`);
             setUserData(res.data);
             setSelectedItems([]);
         } catch (err) {
             setActionStatus("error");
-            setActionMsg(err.response?.data?.message ?? "Ошибка при выполнении действия");
+            setActionMsg(err.response?.data?.error ?? "Ошибка при выполнении действия");
         }
     };
 
@@ -149,20 +124,20 @@ function AdminAwards() {
                         </div>
                         <div className="aa-award-row__right">
                             {item.link && (
-                                <Link
-                                    to={item.link}
+                                <a
+                                    href={item.link}
                                     target="_blank"
-                                    rel="noreferrer"
+                                    rel="noopener noreferrer"
                                     className="aa-link"
                                 >
                                     Ссылка ↗
-                                </Link>
+                                </a>
                             )}
                             <input
                                 type="checkbox"
                                 className="aa-checkbox"
-                                checked={selectedItems.includes(`${item.id}-${item.stage}`)}
-                                onChange={() => toggleItem(item.id, item.stage)}
+                                checked={selectedItems.includes(item.id)}
+                                onChange={() => toggleItem(item.id)}
                             />
                         </div>
                     </div>
@@ -171,9 +146,14 @@ function AdminAwards() {
         );
     };
 
-    const hasAnyAwards =
-        userData &&
-        AWARD_SECTIONS.some((s) => (userData[s.key]?.length ?? 0) > 0);
+    // Этапы у каждой организации свои, поэтому группируем по тому, что пришло.
+    const stageGroups = [...(userData?.userAwards ?? []).reduce((acc, item) => {
+        const key = String(item.stage);
+        if (!acc.has(key)) acc.set(key, { name: item.stageName || "Этап", items: [] });
+        acc.get(key).items.push(item);
+        return acc;
+    }, new Map()).values()];
+    const hasAnyAwards = stageGroups.length > 0;
 
     return (
         <div className="aa-root">
@@ -184,17 +164,13 @@ function AdminAwards() {
             <div className="aa-layout">
                 {/* ── Left panel: orgs + teachers ── */}
                 <aside className="aa-sidebar">
-                    <h2 className="aa-sidebar__heading">Организации</h2>
+                    <h2 className="aa-sidebar__heading">Организация</h2>
                     <div className="aa-org-list">
-                        {organizations.map((org) => (
-                            <button
-                                key={org.id}
-                                className={`aa-org-btn${selectedOrg?.id === org.id ? " aa-org-btn--active" : ""}`}
-                                onClick={() => setSelectedOrg(org)}
-                            >
-                                {org.name}
-                            </button>
-                        ))}
+                        {selectedOrg ? (
+                            <span className="aa-org-btn aa-org-btn--active">{selectedOrg.name}</span>
+                        ) : orgResolved && (
+                            <p className="aa-hint">Выберите организацию в шапке сайта</p>
+                        )}
                     </div>
 
                     {selectedOrg && (
@@ -235,7 +211,7 @@ function AdminAwards() {
                     {!selectedOrg && (
                         <div className="aa-empty">
                             <span className="aa-empty__icon">🏢</span>
-                            <p>Выберите организацию слева</p>
+                            <p>Выберите организацию в шапке сайта</p>
                         </div>
                     )}
 
@@ -262,14 +238,14 @@ function AdminAwards() {
                                         {userData.userInfo?.name}
                                     </h2>
                                     <p className="aa-teacher-header__meta">
-                                        {userData.userInfo?.institut} · {userData.userInfo?.position}
+                                        {userData.userInfo?.institute} · {userData.userInfo?.position}
                                     </p>
                                     <p className="aa-teacher-header__meta">
                                         {userData.userInfo?.email}
                                     </p>
                                 </div>
                                 <Link
-                                    to={`/user/admin/${selectedTeacher.id}`}
+                                    to={`/user/${selectedTeacher.id}?orgId=${selectedOrg.id}`}
                                     className="aa-teacher-header__link"
                                 >
                                     Полная карточка ↗
@@ -284,8 +260,8 @@ function AdminAwards() {
                                 </div>
                             ) : (
                                 <div className="aa-awards">
-                                    {AWARD_SECTIONS.map((s) =>
-                                        renderSection(userData[s.key], s.label)
+                                    {stageGroups.map((group) =>
+                                        renderSection(group.items, group.name)
                                     )}
                                 </div>
                             )}
@@ -299,14 +275,14 @@ function AdminAwards() {
                                     <button
                                         className="aa-action-bar__btn aa-action-bar__btn--freeze"
                                         disabled={selectedItems.length === 0 || actionStatus === "loading"}
-                                        onClick={() => handleAction("freeze")}
+                                        onClick={() => handleAction(false)}
                                     >
                                         ❄ Заморозить
                                     </button>
                                     <button
                                         className="aa-action-bar__btn aa-action-bar__btn--unfreeze"
                                         disabled={selectedItems.length === 0 || actionStatus === "loading"}
-                                        onClick={() => handleAction("active")}
+                                        onClick={() => handleAction(true)}
                                     >
                                         🔥 Разморозить
                                     </button>

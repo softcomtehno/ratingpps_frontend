@@ -37,6 +37,29 @@
   padding: 14px;
 }
 
+.lpps-orgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lpps-org {
+  border: 1px solid #dbe5ef;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.lpps-org--active {
+  background: #2d4478;
+  border-color: #2d4478;
+  color: #fff;
+}
+
 .lpps-search-label {
   display: flex;
   align-items: center;
