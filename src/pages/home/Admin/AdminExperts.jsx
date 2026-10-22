@@ -41,7 +41,7 @@ export default function AdminExperts() {
     useEffect(() => {
         fetchExperts();
         // Load teachers for the selection
-        api.get("/api/teacher")
+        api.get("/api/teacher/")
             .then((res) => setTeachers(Array.isArray(res.data) ? res.data : []))
             .catch((err) => console.error(err));
     }, [fetchExperts]);

@@ -43,13 +43,13 @@ export default function AdminDirectors() {
 
         // Load all institutes for the modal dropdown
         api
-            .get("/api/institute")
+            .get("/api/institute/")
             .then((res) => setInstitutes(Array.isArray(res.data) ? res.data : []))
             .catch((err) => console.error(err));
 
         // Load teachers
         api
-            .get("/api/teacher")
+            .get("/api/teacher/")
             .then((res) => setTeachers(Array.isArray(res.data) ? res.data : []))
             .catch((err) => console.error(err));
     }, [fetchDirectors]);
