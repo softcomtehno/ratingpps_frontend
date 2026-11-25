@@ -1,19 +1,20 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import api from '../services/api';
 import { clearToken, getToken, setToken as persistToken } from '../services/auth';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken]   = useState(getToken());
-  const [user, setUser]     = useState(null); // для обычных user
-  const [teacher, setTeacher]=useState(null); // для teacher
+  const [token, setToken] = useState(getToken());
+  const [teacher, setTeacher] = useState(null);
 
-  useEffect(() => { // при старте-app загружаем профиль
+  useEffect(() => {
     if (!token) return;
-    api.get('/api/me') // универсальный энд-поинт (можно сделать /api/me/profile)
+    api.get('/api/me')
       .then((r) => setTeacher(r.data))
       .catch(() => logout());
   }, [token]);
@@ -34,4 +35,8 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node,
 };

@@ -43,7 +43,7 @@ export default function OrganizationInstituteTeachersPage() {
     };
   }, [orgId, instId, selectedYearId, yearsLoading]);
 
-  const teachers = data?.teachers ?? [];
+  const teachers = useMemo(() => data?.teachers ?? [], [data]);
   const withPoints = useMemo(() => teachers.filter((t) => Number(t.points) > 0).length, [teachers]);
   const withoutPoints = teachers.length - withPoints;
   const completionPct = teachers.length > 0 ? Math.round((withPoints / teachers.length) * 100) : 0;

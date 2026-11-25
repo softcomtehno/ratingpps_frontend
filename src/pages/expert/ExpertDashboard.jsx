@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from '../../services/api';
 import NavBar from "../../components/NavBar";
-import useAuthToken from "../../hooks/useAuthToken";
 import "../../css/AdminDirectors.css"; // Consistent look
 
 export default function ExpertDashboard() {
-    const token = useAuthToken();
     const [expertInfo, setExpertInfo] = useState(null);
     const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     const [targets, setTargets] = useState({ teachers: [], institutes: [] });
     const [search, setSearch] = useState("");
@@ -18,23 +15,21 @@ export default function ExpertDashboard() {
     const [reason, setReason] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
-    const fetchDashboard = () => {
-        setLoading(true);
-        api.get("/api/expert/dashboard", { headers: { Authorization: `Bearer ${token}` } })
+    const fetchDashboard = useCallback(() => {
+        api.get("/api/expert/dashboard")
             .then(res => {
                 setExpertInfo(res.data.expertInfo);
                 setHistory(res.data.history);
             })
-            .catch(err => console.error(err))
-            .finally(() => setLoading(false));
-    };
+            .catch(err => console.error(err));
+    }, []);
 
     useEffect(() => {
         fetchDashboard();
-        api.get("/api/expert/targets", { headers: { Authorization: `Bearer ${token}` } })
+        api.get("/api/expert/targets")
             .then(res => setTargets(res.data))
             .catch(err => console.error(err));
-    }, [token]);
+    }, [fetchDashboard]);
 
     const handleAddAdjustment = async (e) => {
         e.preventDefault();
@@ -49,7 +44,7 @@ export default function ExpertDashboard() {
                 targetId: Number(targetId),
                 points: Number(points),
                 reason
-            }, { headers: { Authorization: `Bearer ${token}` } });
+            });
             
             setTargetId("");
             setPoints(0);

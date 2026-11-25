@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 /**
  * YearSelector — компонент для выбора академического года на страницах рейтинга.
  *
@@ -8,7 +10,7 @@
  *   loading      — флаг загрузки
  */
 function YearSelector({ years, selectedYear, onChange, loading }) {
-  if (loading || years.length === 0) return null;
+  if (loading || !years || years.length === 0) return null;
 
   return (
     <div
@@ -68,5 +70,22 @@ function YearSelector({ years, selectedYear, onChange, loading }) {
     </div>
   );
 }
+
+YearSelector.propTypes = {
+  years: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string,
+      isCurrent: PropTypes.bool,
+      isLocked: PropTypes.bool,
+    })
+  ),
+  selectedYear: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+  }),
+  onChange: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+};
 
 export default YearSelector;

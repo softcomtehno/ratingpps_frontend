@@ -3,15 +3,11 @@ import api from '../../services/api';
 import NavBar from "../../components/NavBar";
 import DirectorStageNav from "../../components/DirectorStageNav";
 import AccountConf from "../../components/AccountConf";
-import useAuthToken from "../../hooks/useAuthToken";
 import "../../css/DirectorOffice.css";
 import "../../css/PrivateOfficeNew.css";
 import "../../css/Awards.css";
 
 export default function DirectorAnswersPage() {
-    const token = useAuthToken();
-    const headers = { Authorization: `Bearer ${token}` };
-
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,7 +22,7 @@ export default function DirectorAnswersPage() {
 
     useEffect(() => {
         let mounted = true;
-        api.get("/api/director/institute/answers", { headers })
+        api.get("/api/director/institute/answers")
             .then((res) => {
                 if (!mounted) return;
                 const data = Array.isArray(res.data) ? res.data : [];
@@ -34,7 +30,6 @@ export default function DirectorAnswersPage() {
                 const seen = new Set();
                 const unique = [];
                 data.forEach(q => {
-                    const sid = q.subtitleId ?? q.id; // may not have subtitleId
                     if (!seen.has(q.subtitleName)) {
                         seen.add(q.subtitleName);
                         unique.push(q);
@@ -66,7 +61,7 @@ export default function DirectorAnswersPage() {
             await api.post("/api/director/institute/answers", {
                 subtitleId: q.subtitleId,
                 answerLink: link
-            }, { headers });
+            });
 
             setStatus(prev => ({ ...prev, [sid]: 'success' }));
             setLinks(prev => ({ ...prev, [sid]: "" })); // clear input for next entry

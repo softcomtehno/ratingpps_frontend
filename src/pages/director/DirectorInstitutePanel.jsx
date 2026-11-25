@@ -4,14 +4,10 @@ import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import DirectorStageNav from "../../components/DirectorStageNav";
 import AccountConf from "../../components/AccountConf";
-import useAuthToken from "../../hooks/useAuthToken";
 import "../../css/DirectorOffice.css";
 import "../../css/PrivateOfficeNew.css";
 
 export default function DirectorInstitutePanel() {
-    const token = useAuthToken();
-    const headers = { Authorization: `Bearer ${token}` };
-
     const [institute, setInstitute] = useState(null);
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -30,7 +26,7 @@ export default function DirectorInstitutePanel() {
             setLoading(true);
             setError(null);
             try {
-                const res = await api.get("/api/director/institute", { headers });
+                const res = await api.get("/api/director/institute");
                 if (!mounted) return;
                 const data = res.data;
                 setInstitute({
@@ -54,7 +50,7 @@ export default function DirectorInstitutePanel() {
     const handleSaveInstitute = async () => {
         setSaving(true);
         try {
-            await api.put("/api/director/institute", { teacherTotal: parseInt(editTotal) }, { headers });
+            await api.put("/api/director/institute", { teacherTotal: parseInt(editTotal) });
             setInstitute(prev => ({ ...prev, teacherTotal: parseInt(editTotal) }));
             setEditing(false);
         } catch (e) {
@@ -73,7 +69,7 @@ export default function DirectorInstitutePanel() {
         setDismissError(null);
         setConfirmId(null);
         try {
-            await api.delete(`/api/director/institute/teacher/${teacherId}`, { headers });
+            await api.delete(`/api/director/institute/teacher/${teacherId}`);
             setTeachers((prev) => prev.filter((t) => (t.teacherId ?? t.id) !== teacherId));
         } catch (e) {
             setDismissError(e.response?.data?.message || "Не удалось уволить преподавателя");

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 import NavBar from "../../../components/NavBar";
@@ -14,11 +14,7 @@ export default function AdminOrgInstitutesPage() {
     const [currentInstitute, setCurrentInstitute] = useState(null);
     const [formData, setFormData] = useState({ name: "", reduction: "", teacherTotal: "" });
 
-    useEffect(() => {
-        fetchData();
-    }, [id]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const orgRes = await api.get(`/api/organizations/${id}`);
             setOrganization(orgRes.data);
@@ -28,7 +24,11 @@ export default function AdminOrgInstitutesPage() {
         } catch (err) {
             console.error(err);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleOpenModal = (inst = null) => {
         setCurrentInstitute(inst);

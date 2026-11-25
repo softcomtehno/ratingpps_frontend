@@ -57,7 +57,10 @@ export default function OrganizationAwardTeachersPage() {
     () => awards.find((a) => Number(a.id) === Number(selectedTitleId)) ?? null,
     [awards, selectedTitleId]
   );
-  const subtitleOptions = selectedTitle?.subtitle ?? [];
+  const subtitleOptions = useMemo(
+    () => selectedTitle?.subtitle ?? [],
+    [selectedTitle]
+  );
 
   useEffect(() => {
     if (!selectedTitle) return;

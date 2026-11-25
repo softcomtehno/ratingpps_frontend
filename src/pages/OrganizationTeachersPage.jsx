@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import YearSelector from "../components/YearSelector";
@@ -149,6 +150,11 @@ const OrganizationTeachersPage = () => {
     ) : (
       <span className="otp-sort-arrow otp-sort-arrow--idle">⇅</span>
     );
+
+  SortArrow.propTypes = {
+    active: PropTypes.bool,
+    direction: PropTypes.string,
+  };
 
   return (
     <div className="otp-root">

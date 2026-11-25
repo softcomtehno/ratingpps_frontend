@@ -4,14 +4,10 @@ import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import DirectorStageNav from "../../components/DirectorStageNav";
 import AccountConf from "../../components/AccountConf";
-import useAuthToken from "../../hooks/useAuthToken";
 import "../../css/DirectorOffice.css";
 import "../../css/PrivateOfficeNew.css";
 
 export default function DirectorTeachersPage() {
-    const token = useAuthToken();
-    const headers = { Authorization: `Bearer ${token}` };
-
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,7 +22,7 @@ export default function DirectorTeachersPage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await api.get("/api/director/institute", { headers });
+                const res = await api.get("/api/director/institute");
                 if (!mounted) return;
                 const data = res.data;
                 setTeachers(Array.isArray(data.teachers) ? data.teachers : []);
@@ -49,7 +45,7 @@ export default function DirectorTeachersPage() {
         setDismissError(null);
         setConfirmId(null);
         try {
-            await api.delete(`/api/director/institute/teacher/${teacherId}`, { headers });
+            await api.delete(`/api/director/institute/teacher/${teacherId}`);
             setTeachers((prev) => prev.filter((t) => (t.teacherId ?? t.id) !== teacherId));
         } catch (e) {
             setDismissError(e.response?.data?.message || "Не удалось уволить преподавателя");
